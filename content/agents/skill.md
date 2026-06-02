@@ -17,6 +17,8 @@ From any directory. The CLI installs to agents it finds on your machine; use `-g
 npx skills add react-native-nitro-google-signin/google-signin -g -y
 ```
 
+This is the **recommended install command** used across the README, `AGENTS.md`, and this documentation site.
+
 | Flag | Purpose |
 | ---- | ------- |
 | `-g, --global` | Install under your home directory (all projects) |

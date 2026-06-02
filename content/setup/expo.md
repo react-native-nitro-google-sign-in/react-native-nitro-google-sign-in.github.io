@@ -113,7 +113,7 @@ Or pass paths in plugin options:
 ```
 
 :::tip Optional: skip manual Gradle on Android
-**Why:** You do **not** need `@react-native-google-signin/google-signin` or hand-edited `build.gradle` when `googleServicesFile` is set — the Expo config plugin applies `com.google.gms.google-services` at prebuild.
+**Why:** You do **not** need a separate Google Sign-In npm package or hand-edited `build.gradle` when `googleServicesFile` is set — the Expo config plugin applies `com.google.gms.google-services` at prebuild.
 :::
 
 ### Without Firebase (manual iOS URL scheme)

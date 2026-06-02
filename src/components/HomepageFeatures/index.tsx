@@ -15,7 +15,7 @@ const FeatureList: FeatureItem[] = [
     title: 'Universal One Tap API',
     icon: '🎯',
     description:
-      'Same flow as the licensed @react-native-google-signin/google-signin One Tap API — configure, signIn, createAccount, and presentExplicitSignIn.',
+      'Universal One Tap API — configure, signIn, createAccount, and presentExplicitSignIn.',
     to: '/docs/guide/usage',
   },
   {

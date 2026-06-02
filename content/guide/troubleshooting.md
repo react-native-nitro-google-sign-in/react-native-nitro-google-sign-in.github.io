@@ -64,9 +64,9 @@ Configure either Firebase files or manual scheme:
 
 Call `checkPlayServices()` and use an emulator image **with Google Play**.
 
-## Compare with reference implementation
+## Platform-specific behavior
 
-Behavior aligns with [React Native Google Sign-In — One Tap](https://react-native-google-signin.github.io/docs/one-tap). Differences are called out in the README for platform-specific revoke/sign-out behavior.
+Platform differences for `signOut()`, `revokeAccess()`, and scope requests are documented in [Usage](/docs/guide/usage) and the [API reference](/docs/guide/api-reference).
 
 ## Still stuck?
 

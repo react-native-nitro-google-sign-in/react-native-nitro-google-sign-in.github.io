@@ -11,9 +11,7 @@ How to combine the **installable skill** with optional **project rules** so any 
 Install once per machine or per repo — see **[Install the agent skill](/docs/agents/skill)** for your provider (`-a cursor`, `-a claude-code`, `-a github-copilot`, …).
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
-  --skill react-native-nitro-google-signin \
-  -g -y
+npx skills add react-native-nitro-google-signin/google-signin -g -y
 ```
 
 Restart your editor or agent after install.

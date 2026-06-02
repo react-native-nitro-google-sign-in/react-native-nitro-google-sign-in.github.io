@@ -5,7 +5,7 @@ slug: /intro
 
 # Introduction
 
-**react-native-nitro-google-signin** brings [Universal (One Tap) Google Sign-In](https://react-native-google-signin.github.io/docs/one-tap) to React Native with [Nitro Modules](https://nitro.margelo.com) and direct JSI bindings.
+**react-native-nitro-google-signin** brings Universal (One Tap) Google Sign-In to React Native with [Nitro Modules](https://nitro.margelo.com) and direct JSI bindings.
 
 | Platform | Native stack |
 | -------- | ------------ |
@@ -15,7 +15,7 @@ slug: /intro
 ## Why this module?
 
 - **Performance** — Nitro HybridObjects avoid classic bridge serialization for sign-in calls.
-- **Familiar API** — Mirrors the licensed `@react-native-google-signin/google-signin` One Tap surface so guides and mental models transfer directly.
+- **Familiar API** — One Tap sign-in surface documented in this site’s [Usage](/docs/guide/usage) and [API reference](/docs/guide/api-reference).
 - **Expo-friendly** — Config plugin wires Google Services (Android), URL schemes (iOS), and optional Firebase files.
 - **New Architecture** — Targets React Native **0.76+** with `react-native-nitro-modules`.
 

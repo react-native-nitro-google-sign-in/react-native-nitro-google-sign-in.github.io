@@ -74,7 +74,7 @@ Optional screenshot sources: `assets/` → copy to `docs/static/` (see `assets/R
 
 1. Prefer **one concern per PR** (feature, fix, or docs).
 2. Describe **what changed**, **why**, and **how you tested** (platform, bare vs Expo).
-3. **Update docs** for API or setup changes.
+3. **Update docs** for API or setup changes. For sign-in flows, keep [Usage](/docs/guide/usage) and the [API reference](/docs/guide/api-reference) in sync with code changes.
 4. **Update the agent skill** when behavior or setup changes — [Install skill](/docs/agents/skill).
 5. **No secrets** in commits.
 6. Contributions are licensed under [MIT](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/LICENSE).

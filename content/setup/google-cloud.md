@@ -245,7 +245,7 @@ ios: { googleServicesFile: './GoogleService-Info.plist' },
 
 Ensure Web, Android, and iOS clients live in the **same** Google Cloud project.
 
-Reference: [React Native Google Sign-In — setting up](https://react-native-google-signin.github.io/docs/setting-up/get-config-file).
+See also [Android setup](/docs/setup/android) and [iOS setup](/docs/setup/ios) for platform-specific config file steps.
 
 ---
 

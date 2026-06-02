@@ -106,7 +106,7 @@ Use the **`REVERSED_CLIENT_ID`** from `GoogleService-Info.plist` (format: `com.g
 
 After Google Sign-In opens Safari or an in-app browser, iOS returns to your app via the reversed client ID URL scheme. The native SDK must receive that URL through `GIDSignIn.sharedInstance.handle(url)`.
 
-Reference: [licensed RN Google Sign-In iOS guide](https://react-native-google-signin.github.io/docs/setting-up/ios#optional-modify-your-app-to-respond-to-the-url-scheme) (marked optional there only when Google is the sole URL handler).
+Reference: [iOS setup — AppDelegate URL handling](/docs/setup/ios#appdelegate-handle-oauth-redirect-urls) (optional on Expo when Google is the sole URL handler; recommended on bare RN).
 
 | Situation | | Why |
 | --------- | --- | --- |
@@ -117,7 +117,7 @@ Reference: [licensed RN Google Sign-In iOS guide](https://react-native-google-si
 | Sign-in **stuck** after browser on any stack | **Required** | Missing `handle(url)` is a common cause |
 
 :::tip Not only for “multiple URL handlers”
-The [upstream guide](https://react-native-google-signin.github.io/docs/setting-up/ios#optional-modify-your-app-to-respond-to-the-url-scheme) labels this step optional when Google is your **only** URL handler. That assumes your app already implements `openURL`. **Bare React Native 0.77+ often does not** — so we **recommend** adding `handle(url)` even with a single handler. It becomes **required** when another SDK also handles URLs, or when sign-in never returns after OAuth.
+Some guides label this step optional when Google is your **only** URL handler. That assumes your app already implements `openURL`. **Bare React Native 0.77+ often does not** — so we **recommend** adding `handle(url)` even with a single handler. It becomes **required** when another SDK also handles URLs, or when sign-in never returns after OAuth.
 :::
 
 Rebuild the native app after changing `AppDelegate`.

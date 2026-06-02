@@ -283,7 +283,7 @@ Returned only from [`requestScopes()`](#requestscopesscopes-string-promiseonetap
 
 ### Placeholder param types
 
-Reserved for API parity with the licensed One Tap package (currently no fields):
+Reserved for API parity with the Universal One Tap surface (currently no fields):
 
 ```ts
 type OneTapSignInParams = Record<string, never>
@@ -360,7 +360,7 @@ type StatusCode = (typeof statusCodes)[keyof typeof statusCodes]
 | `ONE_TAP_START_FAILED` | Credential Manager / Google Sign-In request failed (not user cancel). |
 | `PLAY_SERVICES_NOT_AVAILABLE` | **Android** — Play Services missing or outdated (`checkPlayServices` or sign-in). |
 | `IN_PROGRESS` | No `Activity` / view controller, or sign-in called before `configure()`. |
-| `SIGN_IN_REQUIRED` | Reserved / parity with licensed API — user must sign in first. |
+| `SIGN_IN_REQUIRED` | Reserved — user must sign in first. |
 | `SIGN_IN_CANCELLED` | Reserved / parity — prefer `isCancelledResponse()` on responses. |
 
 ### `isErrorWithCode(error: unknown): error is GoogleSignInError`

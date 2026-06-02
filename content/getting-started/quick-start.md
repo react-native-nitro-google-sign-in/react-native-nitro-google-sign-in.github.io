@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Quick Start
 
-Minimal flow matching the [Universal sign-in guide](https://react-native-google-signin.github.io/docs/one-tap).
+Minimal flow — see [Usage](/docs/guide/usage) for the full sign-in cascade.
 
 :::danger Required before this flow
 **Why:** Sign-in calls fail without Google Cloud OAuth clients and platform setup ([Google Cloud](/docs/setup/google-cloud), [Android](/docs/setup/android), [iOS](/docs/setup/ios), or [Expo](/docs/setup/expo)).

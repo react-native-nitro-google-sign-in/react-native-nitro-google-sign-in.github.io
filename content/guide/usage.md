@@ -22,7 +22,7 @@ GoogleOneTapSignIn.configure({
 
 ## Recommended sign-in flow
 
-Same cascade as [One Tap documentation](https://react-native-google-signin.github.io/docs/one-tap):
+Same cascade as the [Usage guide](/docs/guide/usage) and [Quick Start](/docs/getting-started/quick-start):
 
 1. `checkPlayServices()` (Android)
 2. `signIn()` — silent / restore

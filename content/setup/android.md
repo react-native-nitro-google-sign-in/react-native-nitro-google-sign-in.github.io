@@ -127,7 +127,7 @@ You **cannot** omit Play services on the device or the **Web** client ID when us
 
 ## Google Services Gradle plugin & `google-services.json`
 
-This matches the [licensed Android setup — Update gradle files](https://react-native-google-signin.github.io/docs/setting-up/android#2-update-gradle-files), adapted for **react-native-nitro-google-signin**.
+Gradle setup for **react-native-nitro-google-signin** when using `webClientId: 'autoDetect'`:
 
 ### Path comparison
 
@@ -158,7 +158,7 @@ See [Credential Manager & GMS](#credential-manager-and-gms).
 ## Without `google-services.json` (explicit `webClientId`)
 
 :::tip Optional setup path
-**Why optional:** Same idea as the reference guide’s [“Without Firebase Authentication”](https://react-native-google-signin.github.io/docs/setting-up/android#without-firebase-authentication) — **no Gradle changes** if you pass the Web client ID in JavaScript.
+**Why optional:** **No Gradle changes** if you pass the Web client ID in JavaScript instead of using `autoDetect`.
 :::
 
 You still need:

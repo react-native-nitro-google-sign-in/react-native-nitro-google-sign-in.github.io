@@ -4,6 +4,10 @@ import type * as Preset from '@docusaurus/preset-classic'
 
 const organizationName = 'react-native-nitro-google-signin'
 const projectName = 'react-native-nitro-google-signin.github.io'
+const npmPackageName = 'react-native-nitro-google-signin'
+const npmPackageUrl = `https://www.npmjs.com/package/${npmPackageName}`
+const githubRepoUrl =
+  'https://github.com/react-native-nitro-google-signin/google-signin'
 
 /**
  * Org GitHub Pages site (this repo): https://react-native-nitro-google-signin.github.io/
@@ -68,7 +72,12 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/react-native-nitro-google-signin/google-signin',
+          href: npmPackageUrl,
+          label: 'npm',
+          position: 'right',
+        },
+        {
+          href: githubRepoUrl,
           label: 'GitHub',
           position: 'right',
         },
@@ -120,8 +129,12 @@ const config: Config = {
           title: 'More',
           items: [
             {
-              label: 'RN Google Sign-In (reference)',
-              href: 'https://react-native-google-signin.github.io/docs/one-tap',
+              label: 'Usage guide',
+              to: '/docs/guide/usage',
+            },
+            {
+              label: 'npm package',
+              href: npmPackageUrl,
             },
             {
               label: 'Nitro Modules',

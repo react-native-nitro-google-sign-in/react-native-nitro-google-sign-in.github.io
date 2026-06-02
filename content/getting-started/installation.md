@@ -6,6 +6,8 @@ sidebar_position: 2
 
 Install **both** this package and **react-native-nitro-modules**.
 
+**npm:** [react-native-nitro-google-signin](https://www.npmjs.com/package/react-native-nitro-google-signin)
+
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
