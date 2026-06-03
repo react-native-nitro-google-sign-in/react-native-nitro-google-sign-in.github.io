@@ -35,6 +35,15 @@ Interactive sign-in opens a browser or account sheet, then should return to your
 - Expo: include `GoogleService-Info.plist` or `iosUrlScheme` in the plugin
 - Re-run prebuild after changing plist
 
+## Release builds / R8 / ProGuard {#release-builds-r8-proguard}
+
+Sign-in works in **debug** but crashes or no-ops in **release** after enabling `minifyEnabled true`:
+
+1. **Consumer rules** — `react-native-nitro-google-signin` ships `consumer-rules.pro` with the AAR. Upgrade the package instead of copying keeps manually ([Android setup — ProGuard / R8](/docs/setup/android#proguard-r8)).
+2. **Do not** add blanket `-keep class androidx.** { *; }` for Credential Manager — `androidx.credentials` and `credentials-play-services-auth` already embed the rules they need.
+3. **Peer** — install and rebuild with `react-native-nitro-modules` (Nitro JNI).
+4. **Verify** — reproduce on `assembleRelease` or your store build, then inspect logcat for `ClassNotFoundException` / missing `HybridNitroGoogleSignin`.
+
 ## `DEVELOPER_ERROR` / sign-in fails immediately (Android)
 
 - Wrong **SHA-1** (or missing **SHA-256** in Firebase) on the Android OAuth client

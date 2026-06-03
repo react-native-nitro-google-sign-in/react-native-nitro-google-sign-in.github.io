@@ -19,6 +19,7 @@ OAuth, SHA-1, `google-services.json`, and file paths: [Google Cloud & config fil
 | `checkPlayServices()` before sign-in | **Required** (Android) | Credential Manager Google ID flow needs Play services on the device |
 | Credential Manager + GMS Maven deps in **your** app | **Optional** (omit) | Already bundled by this library (see below) |
 | Expo `googleServicesFile` + prebuild | **Required for `autoDetect`** (Expo) | Config plugin applies Gradle for you |
+| Release `minifyEnabled true` | **Optional** | Consumer ProGuard rules ship with the library — [details](#proguard-r8) |
 
 ---
 
@@ -293,6 +294,48 @@ await GoogleOneTapSignIn.checkPlayServices()
 
 ---
 
+## ProGuard / R8 (release builds) {#proguard-r8}
+
+If you enable code shrinking for release (`minifyEnabled true` in `android/app/build.gradle`), R8 must not strip Nitro HybridObjects or the Google Sign-In bridge classes. **This library ships [consumer ProGuard rules](https://developer.android.com/topic/performance/app-optimization/library-optimization#consumer-rules)** in its AAR (`android/consumer-rules.pro`). Gradle merges them automatically when you depend on `react-native-nitro-google-signin` — you do **not** copy those rules into your app by hand.
+
+### What you need to do
+
+| Task | Required? |
+| ---- | --------- |
+| Enable `minifyEnabled true` / `shrinkResources` on your **app** module | Only if you already ship a minified release |
+| Add manual `-keep` rules for `androidx.credentials`, `googleid`, or `play-services-auth` | **No** — those AndroidX / GMS artifacts bundle their own consumer rules |
+| Add manual `-keep class androidx.** { *; }` | **No** — broad AndroidX keeps bloat the APK and are redundant |
+| Keep `react-native-nitro-modules` as a normal dependency | **Yes** — Nitro core also relies on JNI; use a current peer version |
+| Test sign-in on a **release** build (not only debug) | **Recommended** after turning on R8 |
+
+### App `proguard-rules.pro`
+
+Use your app’s `android/app/proguard-rules.pro` only for **your** code (Firebase, Retrofit, etc.). Do not duplicate this library’s Nitro keeps unless you maintain a fork.
+
+Example release block (app module):
+
+```gradle
+buildTypes {
+  release {
+    minifyEnabled true
+    shrinkResources true
+    proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+  }
+}
+```
+
+### Sign-in works in debug but fails in release
+
+1. Confirm the crash happens on a **release** APK/AAB (`./gradlew :app:assembleRelease` or EAS production build).
+2. Ensure you are on a recent `react-native-nitro-google-signin` and `react-native-nitro-modules` (consumer rules ship with the library).
+3. Remove redundant manual `-keep class androidx.**` rules from your app — they can mask real issues and increase size.
+4. If you use a custom ProGuard configuration plugin, verify it does not strip **consumer** rules from dependencies.
+5. Capture the release stack trace (e.g. `ClassNotFoundException` for `HybridNitroGoogleSignin` or `HybridGoogleSignInButton`) and compare with [Troubleshooting — release / R8](/docs/guide/troubleshooting#release-builds-r8-proguard).
+
+Peer `react-native-nitro-modules` documents its own release keeps; treat both packages as required for minified apps.
+
+---
+
 ## Troubleshooting
 
 | Error | Fix |
@@ -301,5 +344,6 @@ await GoogleOneTapSignIn.checkPlayServices()
 | Sign-in fails / DEVELOPER_ERROR | Wrong SHA-1, package name, or **Android** client ID used instead of **Web** client ID in `configure()` |
 | Play Services not available | Emulator image or device without Google Play |
 | Duplicate Credential Manager classes | You added `androidx.credentials` in the app with a conflicting version — align or remove duplicates |
+| Sign-in OK in debug, broken in release (R8) | Consumer rules ship with this library; avoid `-keep androidx.**`; see [ProGuard / R8](#proguard-r8) |
 
 See [Troubleshooting](/docs/guide/troubleshooting).
