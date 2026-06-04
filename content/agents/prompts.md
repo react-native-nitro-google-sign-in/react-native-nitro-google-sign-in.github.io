@@ -7,7 +7,7 @@ sidebar_position: 4
 Install the skill first:
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```
 
 Then use these prompts in any agent with the skill installed. Optional repo rules: [Rules & workflow](/docs/agents/rules).

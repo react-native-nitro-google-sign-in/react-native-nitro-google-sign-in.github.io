@@ -2,26 +2,26 @@ import { themes as prismThemes } from 'prism-react-renderer'
 import type { Config } from '@docusaurus/types'
 import type * as Preset from '@docusaurus/preset-classic'
 
-const organizationName = 'react-native-nitro-google-signin'
-const projectName = 'react-native-nitro-google-signin.github.io'
+const organizationName = 'react-native-nitro-google-sign-in'
+const projectName = 'react-native-nitro-google-sign-in.github.io'
 const npmPackageName = 'react-native-nitro-google-signin'
 const npmPackageUrl = `https://www.npmjs.com/package/${npmPackageName}`
 const githubRepoUrl =
-  'https://github.com/react-native-nitro-google-signin/google-signin'
+  'https://github.com/react-native-nitro-google-sign-in/google-signin'
 
 /**
- * Org GitHub Pages site (this repo): https://react-native-nitro-google-signin.github.io/
+ * Org GitHub Pages site (this repo): https://react-native-nitro-google-sign-in.github.io/
  * CI sets DOCUSAURUS_BASE_URL=/ ; override locally if needed.
  */
 const baseUrl = process.env.DOCUSAURUS_BASE_URL ?? '/'
-const docsOrigin = 'https://react-native-nitro-google-signin.github.io'
+const docsOrigin = 'https://react-native-nitro-google-sign-in.github.io'
 const siteBase = `${docsOrigin}${baseUrl.replace(/\/$/, '')}`
 
 const config: Config = {
   title: 'React Native Nitro Google Sign-In',
   tagline: 'Nitro-powered Universal Google Sign-In for React Native',
   favicon: 'img/favicon.svg',
-  url: 'https://react-native-nitro-google-signin.github.io',
+  url: 'https://react-native-nitro-google-sign-in.github.io',
   baseUrl,
   organizationName,
   projectName,
@@ -110,7 +110,7 @@ const config: Config = {
             { label: 'Install agent skill', to: '/docs/agents/skill' },
             { label: 'Rules & workflow', to: '/docs/agents/rules' },
             { label: 'List on skills.sh', to: '/docs/agents/skills-sh' },
-            { label: 'Skill source (GitHub)', href: 'https://github.com/react-native-nitro-google-signin/google-signin/tree/main/skills/react-native-nitro-google-signin' },
+            { label: 'Skill source (GitHub)', href: 'https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/skills/react-native-nitro-google-signin' },
           ],
         },
         {
@@ -122,7 +122,7 @@ const config: Config = {
             { label: 'Support', to: '/docs/community/support' },
             {
               label: 'GitHub Issues',
-              href: 'https://github.com/react-native-nitro-google-signin/google-signin/issues',
+              href: 'https://github.com/react-native-nitro-google-sign-in/google-signin/issues',
             },
           ],
         },

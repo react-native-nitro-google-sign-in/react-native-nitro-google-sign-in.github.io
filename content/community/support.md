@@ -14,7 +14,7 @@ sidebar_position: 5
 
 ## GitHub Issues
 
-[Open an issue](https://github.com/react-native-nitro-google-signin/google-signin/issues/new/choose) and pick a template:
+[Open an issue](https://github.com/react-native-nitro-google-sign-in/google-signin/issues/new/choose) and pick a template:
 
 | Template | Use when |
 | -------- | -------- |
@@ -23,7 +23,7 @@ sidebar_position: 5
 | **Feature request** | New API or behavior |
 | **Documentation** | Docs are unclear or wrong |
 
-Blank issues are disabled. For security, use a [private advisory](https://github.com/react-native-nitro-google-signin/google-signin/security/advisories/new) — not a public issue.
+Blank issues are disabled. For security, use a [private advisory](https://github.com/react-native-nitro-google-sign-in/google-signin/security/advisories/new) — not a public issue.
 
 If you use a template, still include:
 
@@ -36,7 +36,7 @@ If you use a template, still include:
 ## AI agents
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```
 
 [For AI agents](/docs/agents/overview) · [Install skill](/docs/agents/skill)

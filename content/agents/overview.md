@@ -11,20 +11,20 @@ The recommended way to teach coding agents about this library is the **installab
 **All agents (auto-detect):**
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```
 
 **One provider** (examples):
 
 ```bash
 # Cursor
-npx skills add react-native-nitro-google-signin/google-signin -a cursor -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -a cursor -g -y
 
 # Claude Code
-npx skills add react-native-nitro-google-signin/google-signin -a claude-code -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -a claude-code -g -y
 
 # GitHub Copilot
-npx skills add react-native-nitro-google-signin/google-signin -a github-copilot -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -a github-copilot -g -y
 ```
 
 Full instructions for **Cursor, Claude Code, Copilot, Codex, Windsurf, Gemini CLI, Cline, Continue, OpenCode, Roo Code, Junie, Kiro, Amp**, and 50+ more: **[Install the agent skill](/docs/agents/skill)**.
@@ -43,7 +43,7 @@ Full instructions for **Cursor, Claude Code, Copilot, Codex, Windsurf, Gemini CL
 | [Install skill](/docs/agents/skill) | Per-provider `npx skills add` commands |
 | [Rules & workflow](/docs/agents/rules) | `AGENTS.md`, Cursor rules, Copilot instructions |
 | [Prompt templates](/docs/agents/prompts) | Starter messages after skill is installed |
-| [AGENTS.md](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/AGENTS.md) | Contributing to this repo |
+| [AGENTS.md](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/AGENTS.md) | Contributing to this repo |
 | [List on skills.sh](/docs/agents/skills-sh) | Get indexed on the public skills directory |
 | [Documentation](/docs/intro) | Full human-readable guides |
 

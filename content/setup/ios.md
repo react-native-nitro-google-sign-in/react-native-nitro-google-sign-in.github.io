@@ -148,7 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 ```
 
-See [`example/ios/NitroGoogleSigninExample/AppDelegate.swift`](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/example/ios/NitroGoogleSigninExample/AppDelegate.swift) in this repo.
+See [`example/ios/NitroGoogleSigninExample/AppDelegate.swift`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/example/ios/NitroGoogleSigninExample/AppDelegate.swift) in this repo.
 
 :::note Bridging header
 Objective-C projects import `#import <GoogleSignIn/GoogleSignIn.h>` in the bridging header. Swift apps can `import GoogleSignIn` directly when the CocoaPod is installed.

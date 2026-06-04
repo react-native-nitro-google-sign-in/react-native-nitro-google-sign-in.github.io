@@ -256,7 +256,7 @@ cd android && ./gradlew clean
 bun run android   # or npx react-native run-android
 ```
 
-See [`example/android/`](https://github.com/react-native-nitro-google-signin/google-signin/tree/main/example/android) for a bare RN project layout (the sample app uses an explicit `webClientId` in `App.tsx`, so Gradle plugin is optional there unless you switch to `autoDetect`).
+See [`example/android/`](https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/example/android) for a bare RN project layout (the sample app uses an explicit `webClientId` in `App.tsx`, so Gradle plugin is optional there unless you switch to `autoDetect`).
 
 ---
 

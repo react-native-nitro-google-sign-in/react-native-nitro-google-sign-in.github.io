@@ -15,24 +15,24 @@ Thank you for using and improving **react-native-nitro-google-signin**. These pa
 
 ## GitHub issue templates
 
-When opening an issue, choose a template on GitHub: [New issue](https://github.com/react-native-nitro-google-signin/google-signin/issues/new/choose).
+When opening an issue, choose a template on GitHub: [New issue](https://github.com/react-native-nitro-google-sign-in/google-signin/issues/new/choose).
 
 - **Bug report** — runtime or native bugs
 - **Setup / configuration help** — OAuth, SHA-1, `autoDetect`, Expo plugin
 - **Feature request** — enhancements
 - **Documentation** — doc fixes
 
-Templates live in [`.github/ISSUE_TEMPLATE/`](https://github.com/react-native-nitro-google-signin/google-signin/tree/main/.github/ISSUE_TEMPLATE).
+Templates live in [`.github/ISSUE_TEMPLATE/`](https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/.github/ISSUE_TEMPLATE).
 
 ## Repository copies
 
 The same policies live on GitHub for tooling and discovery:
 
-- [CONTRIBUTING.md](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/CONTRIBUTING.md)
-- [CODE_OF_CONDUCT.md](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/CODE_OF_CONDUCT.md)
-- [SECURITY.md](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/SECURITY.md)
-- [SUPPORT.md](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/SUPPORT.md)
+- [CONTRIBUTING.md](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/CODE_OF_CONDUCT.md)
+- [SECURITY.md](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/SECURITY.md)
+- [SUPPORT.md](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/SUPPORT.md)
 
 ## License
 
-This project is [MIT licensed](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/LICENSE).
+This project is [MIT licensed](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/LICENSE).

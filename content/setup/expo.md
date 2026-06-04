@@ -190,7 +190,7 @@ npx expo run:android
 ## Example app
 
 :::tip Optional
-**Why:** Reference only — see monorepo [`example-expo`](https://github.com/react-native-nitro-google-signin/google-signin/tree/main/example-expo) for `app.config.js` and `GoogleOneTapSignIn.configure({ webClientId: 'autoDetect' })`.
+**Why:** Reference only — see monorepo [`example-expo`](https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/example-expo) for `app.config.js` and `GoogleOneTapSignIn.configure({ webClientId: 'autoDetect' })`.
 :::
 
 ---

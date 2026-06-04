@@ -7,14 +7,14 @@ sidebar_position: 2
 Use the **[Skills CLI](https://github.com/vercel-labs/skills)** ([skills.sh](https://skills.sh)) to install the official skill for `react-native-nitro-google-signin`. It gives coding agents correct setup steps, API usage, and troubleshooting — without pasting large prompt files.
 
 **Skill name:** `react-native-nitro-google-signin`  
-**Source repo:** [`react-native-nitro-google-signin/google-signin`](https://github.com/react-native-nitro-google-signin/google-signin)
+**Source repo:** [`react-native-nitro-google-signin/google-signin`](https://github.com/react-native-nitro-google-sign-in/google-signin)
 
 ## Install (all detected agents)
 
 From any directory. The CLI installs to agents it finds on your machine; use `-g` for user-wide access:
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```
 
 This is the **recommended install command** used across the README, `AGENTS.md`, and this documentation site.
@@ -34,7 +34,7 @@ After install, **restart your editor or agent** so the skill is loaded.
 Use `-a` / `--agent` to target one tool. Same package for every provider:
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a <agent-id> \
   -g -y
@@ -47,7 +47,7 @@ import TabItem from '@theme/TabItem';
 <TabItem value="cursor" label="Cursor" default>
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a cursor -g -y
 ```
@@ -63,7 +63,7 @@ Restart Cursor. Optional project rules: [Rules & workflow](/docs/agents/rules). 
 <TabItem value="claude" label="Claude Code">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a claude-code -g -y
 ```
@@ -79,7 +79,7 @@ Restart Claude Code. Docs: [Claude Code Skills](https://code.claude.com/docs/en/
 <TabItem value="copilot" label="GitHub Copilot">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a github-copilot -g -y
 ```
@@ -95,7 +95,7 @@ Restart VS Code / your IDE with Copilot agent mode. Docs: [Copilot Agent Skills]
 <TabItem value="codex" label="OpenAI Codex">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a codex -g -y
 ```
@@ -111,7 +111,7 @@ Docs: [Codex Skills](https://developers.openai.com/codex/skills).
 <TabItem value="windsurf" label="Windsurf">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a windsurf -g -y
 ```
@@ -127,7 +127,7 @@ Restart Windsurf.
 <TabItem value="gemini" label="Gemini CLI">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a gemini-cli -g -y
 ```
@@ -143,7 +143,7 @@ Docs: [Gemini CLI Skills](https://geminicli.com/docs/cli/skills/).
 <TabItem value="antigravity" label="Antigravity">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a antigravity -g -y
 ```
@@ -159,7 +159,7 @@ Docs: [Antigravity Skills](https://antigravity.google/docs/skills).
 <TabItem value="cline" label="Cline">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a cline -g -y
 ```
@@ -175,7 +175,7 @@ Docs: [Cline Skills](https://docs.cline.bot/features/skills).
 <TabItem value="continue" label="Continue">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a continue -g -y
 ```
@@ -189,7 +189,7 @@ npx skills add react-native-nitro-google-signin/google-signin \
 <TabItem value="opencode" label="OpenCode">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a opencode -g -y
 ```
@@ -205,7 +205,7 @@ Docs: [OpenCode Skills](https://opencode.ai/docs/skills).
 <TabItem value="roo" label="Roo Code">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a roo -g -y
 ```
@@ -221,7 +221,7 @@ Docs: [Roo Code Skills](https://docs.roocode.com/features/skills).
 <TabItem value="junie" label="JetBrains Junie">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a junie -g -y
 ```
@@ -235,7 +235,7 @@ npx skills add react-native-nitro-google-signin/google-signin \
 <TabItem value="kiro" label="Kiro CLI">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a kiro-cli -g -y
 ```
@@ -251,7 +251,7 @@ Kiro loads `.kiro/skills/` automatically. Docs: [Kiro CLI Skills](https://kiro.d
 <TabItem value="amp" label="Amp">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a amp -g -y
 ```
@@ -274,12 +274,12 @@ Examples:
 
 ```bash
 # Multiple agents in one command
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin \
   -a claude-code -a cursor -a github-copilot -g -y
 
 # Install to every agent the CLI knows about
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin --all -y
 ```
 
@@ -300,7 +300,7 @@ npx skills ls -a cursor -a claude-code
 Committed with your app (team shares the same skill):
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin \
+npx skills add react-native-nitro-google-sign-in/google-signin \
   --skill react-native-nitro-google-signin -y
 ```
 
@@ -308,7 +308,7 @@ npx skills add react-native-nitro-google-signin/google-signin \
 <TabItem value="local" label="Local clone">
 
 ```bash
-git clone https://github.com/react-native-nitro-google-signin/google-signin.git
+git clone https://github.com/react-native-nitro-google-sign-in/google-signin.git
 npx skills add ./google-signin/skills/react-native-nitro-google-signin \
   --skill react-native-nitro-google-signin -g -y
 ```
@@ -317,7 +317,7 @@ npx skills add ./google-signin/skills/react-native-nitro-google-signin \
 <TabItem value="list" label="List skills in repo">
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin --list
+npx skills add react-native-nitro-google-sign-in/google-signin --list
 ```
 
 </TabItem>
@@ -333,7 +333,7 @@ npx skills add react-native-nitro-google-signin/google-signin --list
 | `reference.md` | API, Expo/Android/iOS setup |
 | `examples.md` | Copy-paste snippets |
 
-Source: [`skills/react-native-nitro-google-signin/`](https://github.com/react-native-nitro-google-signin/google-signin/tree/main/skills/react-native-nitro-google-signin)
+Source: [`skills/react-native-nitro-google-signin/`](https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/skills/react-native-nitro-google-signin)
 
 ## After installing
 

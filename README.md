@@ -30,7 +30,7 @@ cd docs && bun run build
 
 Pushes to `main` in **this repo** run [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
-Demo videos are pulled from [`google-signin` `assets/`](https://github.com/react-native-nitro-google-signin/google-signin/tree/main/assets) during CI.
+Demo videos are pulled from [`google-signin` `assets/`](https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/assets) during CI.
 
 ### One-time GitHub setup (required)
 
@@ -40,7 +40,7 @@ Demo videos are pulled from [`google-signin` `assets/`](https://github.com/react
 
 Live site (org Pages):
 
-**https://react-native-nitro-google-signin.github.io/**
+**https://react-native-nitro-google-sign-in.github.io/**
 
 ### If deploy fails
 
@@ -53,5 +53,5 @@ Live site (org Pages):
 ## Agent skill
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```

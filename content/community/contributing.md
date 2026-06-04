@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Contributing
 
-Thank you for helping improve this library. See also [CONTRIBUTING.md on GitHub](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/CONTRIBUTING.md).
+Thank you for helping improve this library. See also [CONTRIBUTING.md on GitHub](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/CONTRIBUTING.md).
 
 ## Code of Conduct
 
@@ -12,12 +12,12 @@ Participation is governed by our [Code of Conduct](/docs/community/code-of-condu
 
 ## Ways to contribute
 
-- **Bug reports** — [Bug report template](https://github.com/react-native-nitro-google-signin/google-signin/issues/new?template=bug_report.yml)
-- **Setup help** — [Setup template](https://github.com/react-native-nitro-google-signin/google-signin/issues/new?template=setup_help.yml)
-- **Feature requests** — [Feature template](https://github.com/react-native-nitro-google-signin/google-signin/issues/new?template=feature_request.yml)
-- **Documentation** — [Docs template](https://github.com/react-native-nitro-google-signin/google-signin/issues/new?template=documentation.yml)
+- **Bug reports** — [Bug report template](https://github.com/react-native-nitro-google-sign-in/google-signin/issues/new?template=bug_report.yml)
+- **Setup help** — [Setup template](https://github.com/react-native-nitro-google-sign-in/google-signin/issues/new?template=setup_help.yml)
+- **Feature requests** — [Feature template](https://github.com/react-native-nitro-google-sign-in/google-signin/issues/new?template=feature_request.yml)
+- **Documentation** — [Docs template](https://github.com/react-native-nitro-google-sign-in/google-signin/issues/new?template=documentation.yml)
 
-All templates: [New issue](https://github.com/react-native-nitro-google-signin/google-signin/issues/new/choose)
+All templates: [New issue](https://github.com/react-native-nitro-google-sign-in/google-signin/issues/new/choose)
 - **Documentation** — edits in `docs/content/` and screenshots in `docs/static/`.
 - **Code** — Kotlin, Swift, TypeScript, Expo config plugin, Nitro specs.
 - **Agent skill** — update `skills/react-native-nitro-google-signin/` when API or setup changes.
@@ -27,7 +27,7 @@ All templates: [New issue](https://github.com/react-native-nitro-google-signin/g
 **Requirements:** Node.js ≥ 20, Bun (recommended), Xcode + CocoaPods (iOS), Android Studio (Android).
 
 ```bash
-git clone https://github.com/react-native-nitro-google-signin/google-signin.git
+git clone https://github.com/react-native-nitro-google-sign-in/google-signin.git
 cd google-signin
 bun install
 ```
@@ -77,15 +77,15 @@ Optional screenshot sources: `assets/` → copy to `docs/static/` (see `assets/R
 3. **Update docs** for API or setup changes. For sign-in flows, keep [Usage](/docs/guide/usage) and the [API reference](/docs/guide/api-reference) in sync with code changes.
 4. **Update the agent skill** when behavior or setup changes — [Install skill](/docs/agents/skill).
 5. **No secrets** in commits.
-6. Contributions are licensed under [MIT](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/LICENSE).
+6. Contributions are licensed under [MIT](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/LICENSE).
 
 Use clear commit messages; [Conventional Commits](https://www.conventionalcommits.org/) help `semantic-release`.
 
-CI in the package repo runs Android/iOS builds. Docs deploy from the [`react-native-nitro-google-signin.github.io`](https://github.com/react-native-nitro-google-signin/react-native-nitro-google-signin.github.io) repo on pushes to `main`.
+CI in the package repo runs Android/iOS builds. Docs deploy from the [`react-native-nitro-google-sign-in.github.io`](https://github.com/react-native-nitro-google-sign-in/react-native-nitro-google-sign-in.github.io) repo on pushes to `main`.
 
 ### Docs deploy
 
-Enable **Settings → Pages → Source: GitHub Actions** on the docs repo. See [`docs/README.md`](https://github.com/react-native-nitro-google-signin/react-native-nitro-google-signin.github.io/blob/main/README.md#deploy-github-pages).
+Enable **Settings → Pages → Source: GitHub Actions** on the docs repo. See [`docs/README.md`](https://github.com/react-native-nitro-google-sign-in/react-native-nitro-google-sign-in.github.io/blob/main/README.md#deploy-github-pages).
 
 ## Project layout
 

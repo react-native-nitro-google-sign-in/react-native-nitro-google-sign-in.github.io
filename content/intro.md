@@ -34,7 +34,7 @@ slug: /intro
 Using Cursor, Claude, or Copilot? Install the agent skill:
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```
 
 See **[For AI agents](/docs/agents/overview)** and **[Install the agent skill](/docs/agents/skill)**.

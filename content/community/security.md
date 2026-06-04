@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Security policy
 
-Full policy: [SECURITY.md on GitHub](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/SECURITY.md).
+Full policy: [SECURITY.md on GitHub](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/SECURITY.md).
 
 ## Supported versions
 
@@ -14,7 +14,7 @@ Security fixes target the **latest npm release**. Older versions may not be patc
 
 **Do not file a public issue for security bugs.**
 
-1. [Open a private security advisory](https://github.com/react-native-nitro-google-signin/google-signin/security/advisories/new) on GitHub, **or**
+1. [Open a private security advisory](https://github.com/react-native-nitro-google-sign-in/google-signin/security/advisories/new) on GitHub, **or**
 2. Email **rutviknabhoya2001@gmail.com** with:
    - Description and impact
    - Steps to reproduce

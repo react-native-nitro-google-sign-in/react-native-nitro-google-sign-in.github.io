@@ -1,6 +1,6 @@
-# Deploy Docusaurus to GitHub Pages (org site: react-native-nitro-google-signin.github.io)
+# Deploy Docusaurus to GitHub Pages (org site: react-native-nitro-google-sign-in.github.io)
 # Prerequisite: Settings → Pages → Source: GitHub Actions
-# https://github.com/react-native-nitro-google-signin/react-native-nitro-google-signin.github.io/settings/pages
+# https://github.com/react-native-nitro-google-sign-in/react-native-nitro-google-sign-in.github.io/settings/pages
 name: Deploy documentation
 
 on:

@@ -17,13 +17,13 @@ sidebar_position: 5
 ## Verify install (after push)
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin --list
+npx skills add react-native-nitro-google-sign-in/google-signin --list
 ```
 
 You should see `react-native-nitro-google-signin` in the output. Then test a real install:
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```
 
 ## Request indexing
@@ -32,7 +32,7 @@ skills.sh does **not** auto-index every new repo immediately. Maintainers add en
 
 1. Confirm the [install check](#verify-install-after-push) passes against `main`.
 2. Open a new issue: [vercel-labs/skills — New issue](https://github.com/vercel-labs/skills/issues/new)
-3. Use the template in [`.github/SKILLS_SH_INDEX_REQUEST.md`](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/.github/SKILLS_SH_INDEX_REQUEST.md) (title + body).
+3. Use the template in [`.github/SKILLS_SH_INDEX_REQUEST.md`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/.github/SKILLS_SH_INDEX_REQUEST.md) (title + body).
 
 Typical title: `Listing: Request indexing for react-native-nitro-google-signin/google-signin`
 
@@ -44,4 +44,4 @@ Typical title: `Listing: Request indexing for react-native-nitro-google-signin/g
 
 ## `skills.sh.json`
 
-This repo includes [`skills.sh.json`](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/skills.sh.json) so the skills.sh **repository page** can group the skill under **React Native** once indexed. See [Customize repo pages](https://skills.sh/docs/customize).
+This repo includes [`skills.sh.json`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/skills.sh.json) so the skills.sh **repository page** can group the skill under **React Native** once indexed. See [Customize repo pages](https://skills.sh/docs/customize).

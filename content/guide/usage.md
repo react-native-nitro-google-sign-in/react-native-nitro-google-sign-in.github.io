@@ -135,7 +135,7 @@ const enableCalendarAccess = async () => {
 You can pass baseline scopes in `configure({ scopes })` and call `requestScopes()` later for **additional** scopes the user opts into.
 :::
 
-See also [`requestScopes()` in the API reference](/docs/guide/api-reference#requestscopesscopes-string-promiseonetapauthorizationresult). Example apps: [bare `example/App.tsx`](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/example/App.tsx) · [Expo `example-expo/App.tsx`](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/example-expo/App.tsx).
+See also [`requestScopes()` in the API reference](/docs/guide/api-reference#requestscopesscopes-string-promiseonetapauthorizationresult). Example apps: [bare `example/App.tsx`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/example/App.tsx) · [Expo `example-expo/App.tsx`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/example-expo/App.tsx).
 
 ## Sign out and revoke
 

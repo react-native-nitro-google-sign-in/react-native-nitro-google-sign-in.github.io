@@ -11,7 +11,7 @@ How to combine the **installable skill** with optional **project rules** so any 
 Install once per machine or per repo — see **[Install the agent skill](/docs/agents/skill)** for your provider (`-a cursor`, `-a claude-code`, `-a github-copilot`, …).
 
 ```bash
-npx skills add react-native-nitro-google-signin/google-signin -g -y
+npx skills add react-native-nitro-google-sign-in/google-signin -g -y
 ```
 
 Restart your editor or agent after install.
@@ -57,7 +57,7 @@ Add or extend **`AGENTS.md`** at your app root:
 - iOS: REVERSED_CLIENT_ID URL scheme; AppDelegate `handle(url)` on bare RN when needed.
 ```
 
-This library’s own repo uses [`AGENTS.md`](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/AGENTS.md) for contributors.
+This library’s own repo uses [`AGENTS.md`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/AGENTS.md) for contributors.
 
 </TabItem>
 <TabItem value="cursor" label="Cursor">

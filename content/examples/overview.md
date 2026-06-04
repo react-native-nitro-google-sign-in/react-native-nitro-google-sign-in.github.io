@@ -8,8 +8,8 @@ The repository includes two sample apps:
 
 | App | Path | Description |
 | --- | ---- | ----------- |
-| **Bare React Native** | [`example/`](https://github.com/react-native-nitro-google-signin/google-signin/tree/main/example) | RN CLI — can use `autoDetect` with config files or explicit `webClientId` in `App.tsx` |
-| **Expo dev client** | [`example-expo/`](https://github.com/react-native-nitro-google-signin/google-signin/tree/main/example-expo) | Config plugin + `webClientId: 'autoDetect'` |
+| **Bare React Native** | [`example/`](https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/example) | RN CLI — can use `autoDetect` with config files or explicit `webClientId` in `App.tsx` |
+| **Expo dev client** | [`example-expo/`](https://github.com/react-native-nitro-google-sign-in/google-signin/tree/main/example-expo) | Config plugin + `webClientId: 'autoDetect'` |
 
 ## Google config files (both examples)
 
@@ -47,7 +47,7 @@ bun run prebuild:clean
 bun run ios   # or android
 ```
 
-See [`example-expo/README.md`](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/example-expo/README.md).
+See [`example-expo/README.md`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/example-expo/README.md).
 
 ## What the samples demonstrate
 

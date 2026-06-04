@@ -81,4 +81,4 @@ Platform differences for `signOut()`, `revokeAccess()`, and scope requests are d
 
 Open an issue with platform, RN version, Expo vs bare, and whether you use `autoDetect` or an explicit `webClientId`:
 
-[GitHub Issues](https://github.com/react-native-nitro-google-signin/google-signin/issues)
+[GitHub Issues](https://github.com/react-native-nitro-google-sign-in/google-signin/issues)

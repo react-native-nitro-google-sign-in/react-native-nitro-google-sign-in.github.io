@@ -6,7 +6,7 @@ sidebar_position: 3
 
 ## Contributor Covenant Code of Conduct
 
-Full text: [CODE_OF_CONDUCT.md on GitHub](https://github.com/react-native-nitro-google-signin/google-signin/blob/main/CODE_OF_CONDUCT.md).
+Full text: [CODE_OF_CONDUCT.md on GitHub](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/CODE_OF_CONDUCT.md).
 
 ### Our pledge
 
