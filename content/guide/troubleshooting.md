@@ -35,6 +35,59 @@ Interactive sign-in opens a browser or account sheet, then should return to your
 - Expo: include `GoogleService-Info.plist` or `iosUrlScheme` in the plugin
 - Re-run prebuild after changing plist
 
+## iOS `pod install` fails — AppCheckCore / RecaptchaInterop (Expo 56+)
+
+`pod install` or `expo prebuild` may fail with:
+
+```text
+The Swift pod `AppCheckCore` depends upon `GoogleUtilities` and `RecaptchaInterop`,
+which do not define modules. To opt into those targets generating module maps...
+```
+
+This happens when CocoaPods resolves **AppCheckCore 11.3.0** (pulled in by Google Sign-In) under Expo’s default **static** pod setup.
+
+### Why not `NitroGoogleSignin.podspec`?
+
+CocoaPods **does not** let a podspec enable `:modular_headers => true` on dependencies — that option exists only in the app **Podfile** (or via a config plugin that edits it).
+
+We also cannot add `AppCheckCore` as a direct `s.dependency` in the podspec: `NitroGoogleSignin` is a **Swift** pod, and CocoaPods then reports that `AppCheckCore` does not define modules (same class of error). Capping `GoogleSignIn` in the podspec helps but is not enough on a fresh `pod install` — `GoogleSignIn` 9.1.x can still resolve `AppCheckCore` 11.3.0.
+
+So the library handles this in two places:
+
+| App type | Who patches the Podfile |
+| -------- | ------------------------ |
+| **Expo** | `react-native-nitro-google-signin` config plugin (automatic on `expo prebuild`) |
+| **Bare RN** | You add the pods below to `ios/Podfile` |
+
+### Expo (dev client)
+
+The config plugin patches `ios/Podfile` during prebuild. Ensure the plugin is listed in `app.config.js`, upgrade `react-native-nitro-google-signin`, then regenerate native projects:
+
+```bash
+npx expo prebuild --clean
+```
+
+No manual Podfile edits are needed for Expo.
+
+### Bare React Native
+
+Add the following **inside your app `target` block** in `ios/Podfile`, **before** `use_native_modules!`:
+
+```ruby
+# react-native-nitro-google-signin: AppCheckCore 11.3.0 + static CocoaPods needs modular headers.
+pod 'AppCheckCore', '< 11.3.0', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
+pod 'RecaptchaInterop', :modular_headers => true
+```
+
+Then reinstall pods from your app root:
+
+```bash
+bundle exec pod install --project-directory="ios"
+```
+
+See also [Expo setup](/docs/setup/expo) and [iOS setup](/docs/setup/ios).
+
 ## Release builds / R8 / ProGuard {#release-builds-r8-proguard}
 
 Sign-in works in **debug** but crashes or no-ops in **release** after enabling `minifyEnabled true`:
