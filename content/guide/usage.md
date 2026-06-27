@@ -88,7 +88,7 @@ const signInWithScopesUpFront = async () => {
 
 ### Option B — scopes after sign-in (`requestScopes`)
 
-Configure without extra scopes, sign in, then call `requestScopes()` when needed. The user may see a consent screen:
+Configure with `offlineAccess: true` when your backend needs a `serverAuthCode`, sign in, then call `requestScopes()` when needed. The user may see a consent screen:
 
 ```ts
 import {
@@ -98,7 +98,10 @@ import {
 
 const CALENDAR_READONLY = 'https://www.googleapis.com/auth/calendar.readonly'
 
-GoogleOneTapSignIn.configure({ webClientId: 'autoDetect' })
+GoogleOneTapSignIn.configure({
+  webClientId: 'autoDetect',
+  offlineAccess: true,
+})
 
 const signInThenRequestScopesLater = async () => {
   await GoogleOneTapSignIn.checkPlayServices()
@@ -129,6 +132,10 @@ const enableCalendarAccess = async () => {
 
 :::info Requires prior sign-in
 `requestScopes()` only works after a successful sign-in (`configure()` + active session). Call it from a button handler or feature gate, not before the user has signed in.
+:::
+
+:::tip `serverAuthCode` from `requestScopes()`
+Set `offlineAccess: true` in `configure()` before calling `requestScopes()` if your backend needs a fresh authorization code for the newly granted scopes. Without offline access, scope consent may succeed but `serverAuthCode` will be `null`.
 :::
 
 :::tip Combine both
