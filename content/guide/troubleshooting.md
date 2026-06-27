@@ -133,6 +133,14 @@ Call `checkPlayServices()` and use an emulator image **with Google Play**.
 
 Platform differences for `signOut()`, `revokeAccess()`, and scope requests are documented in [Usage](/docs/guide/usage) and the [API reference](/docs/guide/api-reference).
 
+## iOS: Missing `serverAuthCode` when scopes are already granted
+
+On iOS, when calling `requestScopes()` or `signIn()` with scopes that the user has already approved in the past, the native iOS SDK returns a local error `scopesAlreadyGranted` (`-8`) and does not contact Google's authorization servers. As a result, no new one-time `serverAuthCode` is issued.
+
+### How to resolve:
+- **Force re-authorization via `presentExplicitSignIn()`**: Configure the library without the specific scopes (or with only basic scopes) and call `presentExplicitSignIn()`. This forces the account chooser browser sheet to display. Since Google OAuth supports incremental/cumulative consent, when your backend exchanges this fresh `serverAuthCode` for a refresh token, Google will issue a token containing all scopes the user has previously authorized.
+- **Or call `signOut()` first**: Calling `signOut()` resets the SDK's local keychain state, forcing the next sign-in flow to contact Google's servers and request a fresh `serverAuthCode`.
+
 ## Still stuck?
 
 Open an issue with platform, RN version, Expo vs bare, and whether you use `autoDetect` or an explicit `webClientId`:
