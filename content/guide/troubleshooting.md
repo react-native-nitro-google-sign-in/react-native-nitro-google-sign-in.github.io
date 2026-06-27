@@ -29,11 +29,14 @@ Interactive sign-in opens a browser or account sheet, then should return to your
 2. On **bare React Native**, add `GIDSignIn.sharedInstance.handle(url)` in `AppDelegate` ([details](/docs/setup/ios#appdelegate-handle-oauth-redirect-urls)).
 3. If you use **Facebook or other `openURL` handlers**, chain them with `||` before/after Google's handler.
 
-## iOS URL scheme / redirect errors
+## iOS URL scheme / redirect errors (App crash on button tap)
 
-- Add `REVERSED_CLIENT_ID` as a URL scheme in Info.plist
-- Expo: include `GoogleService-Info.plist` or `iosUrlScheme` in the plugin
-- Re-run prebuild after changing plist
+If the app crashes immediately upon tapping the Google Sign-In button with a stack trace in `HybridNitroGoogleSignin.signIn` or an `NSInvalidArgumentException` stating `Your app is missing support for the following URL schemes: com.googleusercontent.apps.XXXX`, the custom URL scheme is missing:
+
+- **Required for both Simulators and Real Devices**: This is a mandatory step for all environments because iOS needs the custom scheme to route the browser redirect back into your app.
+- Add the `REVERSED_CLIENT_ID` (e.g. `com.googleusercontent.apps.XXXX`) as a URL scheme in `Info.plist` (under `CFBundleURLTypes`) or in Xcode -> Targets -> Info -> URL Types.
+- Expo: include `GoogleService-Info.plist` or `iosUrlScheme` in the plugin configuration.
+- Re-run prebuild (`npx expo prebuild --clean`) and compile the app again after changing the URL schemes.
 
 ## iOS `pod install` fails — AppCheckCore / RecaptchaInterop (Expo 56+)
 
