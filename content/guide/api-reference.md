@@ -132,9 +132,9 @@ Request **additional** OAuth scopes after the user is signed in. User may see a 
 
 | Field (result) | Type | Description |
 | -------------- | ---- | ----------- |
-| `serverAuthCode` | `string \| null` | Authorization code for your backend, or `null` if unavailable. |
+| `serverAuthCode` | `string \| null` | Authorization code for your backend when `configure({ offlineAccess: true })` was used, or `null` if offline access was not enabled or the platform did not return a code. |
 
-Requires prior successful sign-in (`configure()` + active session).
+Requires prior successful sign-in (`configure()` + active session). When your backend needs a code for incremental scopes, pass `offlineAccess: true` in `configure()` before calling `requestScopes()`.
 
 ---
 
