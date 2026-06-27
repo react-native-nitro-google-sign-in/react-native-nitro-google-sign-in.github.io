@@ -29,11 +29,14 @@ Interactive sign-in opens a browser or account sheet, then should return to your
 2. On **bare React Native**, add `GIDSignIn.sharedInstance.handle(url)` in `AppDelegate` ([details](/docs/setup/ios#appdelegate-handle-oauth-redirect-urls)).
 3. If you use **Facebook or other `openURL` handlers**, chain them with `||` before/after Google's handler.
 
-## iOS URL scheme / redirect errors
+## iOS URL scheme / redirect errors (App crash on button tap)
 
-- Add `REVERSED_CLIENT_ID` as a URL scheme in Info.plist
-- Expo: include `GoogleService-Info.plist` or `iosUrlScheme` in the plugin
-- Re-run prebuild after changing plist
+If the app crashes immediately upon tapping the Google Sign-In button with a stack trace in `HybridNitroGoogleSignin.signIn` or an `NSInvalidArgumentException` stating `Your app is missing support for the following URL schemes: com.googleusercontent.apps.XXXX`, the custom URL scheme is missing:
+
+- **Required for both Simulators and Real Devices**: This is a mandatory step for all environments because iOS needs the custom scheme to route the browser redirect back into your app.
+- Add the `REVERSED_CLIENT_ID` (e.g. `com.googleusercontent.apps.XXXX`) as a URL scheme in `Info.plist` (under `CFBundleURLTypes`) or in Xcode -> Targets -> Info -> URL Types.
+- Expo: include `GoogleService-Info.plist` or `iosUrlScheme` in the plugin configuration.
+- Re-run prebuild (`npx expo prebuild --clean`) and compile the app again after changing the URL schemes.
 
 ## iOS `pod install` fails — AppCheckCore / RecaptchaInterop (Expo 56+)
 
@@ -129,6 +132,14 @@ Call `checkPlayServices()` and use an emulator image **with Google Play**.
 ## Platform-specific behavior
 
 Platform differences for `signOut()`, `revokeAccess()`, and scope requests are documented in [Usage](/docs/guide/usage) and the [API reference](/docs/guide/api-reference).
+
+## iOS: Missing `serverAuthCode` when scopes are already granted
+
+On iOS, when calling `requestScopes()` or `signIn()` with scopes that the user has already approved in the past, the native iOS SDK returns a local error `scopesAlreadyGranted` (`-8`) and does not contact Google's authorization servers. As a result, no new one-time `serverAuthCode` is issued.
+
+### How to resolve:
+- **Force re-authorization via `presentExplicitSignIn()`**: Configure the library without the specific scopes (or with only basic scopes) and call `presentExplicitSignIn()`. This forces the account chooser browser sheet to display. Since Google OAuth supports incremental/cumulative consent, when your backend exchanges this fresh `serverAuthCode` for a refresh token, Google will issue a token containing all scopes the user has previously authorized.
+- **Or call `signOut()` first**: Calling `signOut()` resets the SDK's local keychain state, forcing the next sign-in flow to contact Google's servers and request a fresh `serverAuthCode`.
 
 ## Still stuck?
 

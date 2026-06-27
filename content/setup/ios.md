@@ -68,10 +68,14 @@ GoogleOneTapSignIn.configure({
 ## URL scheme {#url-scheme-required}
 
 :::danger Required
-**Why:** After Safari or ASWebAuthenticationSession completes, iOS opens your app via a custom URL. Without a matching scheme, the OAuth flow never completes.
+**Why:** After Safari or ASWebAuthenticationSession completes, iOS opens your app via a custom URL. Without a matching scheme, the OAuth flow never completes, and the Google Sign-In SDK will crash immediately on button tap.
 :::
 
 Use the **`REVERSED_CLIENT_ID`** from `GoogleService-Info.plist` (format: `com.googleusercontent.apps.XXXX`).
+
+:::note Why can't the SDK fetch this automatically?
+URL schemes must be registered statically with the iOS operating system via the `Info.plist` during app installation so that iOS knows how to route the browser redirect link back into your app. Since iOS does not support dynamic URL scheme registration at runtime, this must be manually configured in your project settings.
+:::
 
 ### Xcode
 
