@@ -145,7 +145,7 @@ Clears the Google Sign-In session in the native SDK.
 | Platform | Notes |
 | -------- | ----- |
 | **iOS** | `GIDSignIn.sharedInstance.signOut()`. |
-| **Android** | Credential Manager has no global sign-out; matches One Tap semantics — **automatic sign-in is disabled** until the next successful interactive sign-in. Clear your app session in JS. |
+| **Android** | Calls `CredentialManager.clearCredentialState()` to clear the user's credential state and disable automatic sign-in semantics until the next successful interactive sign-in. |
 
 ---
 
