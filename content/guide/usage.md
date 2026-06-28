@@ -45,6 +45,10 @@ import {
 
 Request Google API permissions beyond basic profile / ID token. Always use **full scope URLs** (for example `https://www.googleapis.com/auth/calendar.readonly`), not short names.
 
+:::warning `offlineAccess: true` required for `serverAuthCode`
+To receive a `serverAuthCode` — from sign-in (`response.data.serverAuthCode`) or from `requestScopes()` — you **must** pass `offlineAccess: true` in `configure()`. The default is `false`; without it, `serverAuthCode` is always `null` even when scopes are granted.
+:::
+
 | Approach | API | When to use |
 | -------- | --- | ----------- |
 | **At first sign-in** | `configure({ scopes, offlineAccess })` | You know required scopes before the user signs in. Consent may appear during sign-in. |
@@ -52,7 +56,7 @@ Request Google API permissions beyond basic profile / ID token. Always use **ful
 
 ### Option A — scopes at configure time
 
-Pass `scopes` in `configure()`. Set `offlineAccess: true` when your backend needs a `serverAuthCode` to exchange for refresh tokens:
+Pass `scopes` in `configure()`. **`offlineAccess: true` is required** when your backend needs a `serverAuthCode` to exchange for refresh tokens:
 
 ```ts
 import {
@@ -88,7 +92,7 @@ const signInWithScopesUpFront = async () => {
 
 ### Option B — scopes after sign-in (`requestScopes`)
 
-Configure with `offlineAccess: true` when your backend needs a `serverAuthCode`, sign in, then call `requestScopes()` when needed. The user may see a consent screen:
+Configure with **`offlineAccess: true`** (required for `serverAuthCode`), sign in, then call `requestScopes()` when needed. The user may see a consent screen:
 
 ```ts
 import {
@@ -135,7 +139,7 @@ const enableCalendarAccess = async () => {
 :::
 
 :::tip `serverAuthCode` from `requestScopes()`
-Set `offlineAccess: true` in `configure()` before calling `requestScopes()` if your backend needs a fresh authorization code for the newly granted scopes. Without offline access, scope consent may succeed but `serverAuthCode` will be `null`.
+`offlineAccess: true` in `configure()` is **required** before calling `requestScopes()` if your backend needs an authorization code. Without offline access, scope consent may succeed but `serverAuthCode` will always be `null`.
 :::
 
 :::tip Combine both

@@ -56,7 +56,7 @@ Singleton-style object backed by the Nitro hybrid `NitroGoogleSignin`. Call **`c
 | --------- | ---- | -------- | ------- | ----------- |
 | `webClientId` | `string` | yes | — | Web OAuth 2.0 client ID (`*.apps.googleusercontent.com`), or `'autoDetect'` to read from native config ([Android](/docs/setup/android) `default_web_client_id`, iOS `WEB_CLIENT_ID` in plist). |
 | `iosClientId` | `string \| null` | no | plist `CLIENT_ID` | iOS OAuth client ID for `GIDConfiguration.clientID`. **iOS:** required via this field or `GoogleService-Info.plist` `CLIENT_ID`. Ignored on Android. |
-| `offlineAccess` | `boolean` | no | `false` | When `true`, success responses may include `serverAuthCode` for your backend. |
+| `offlineAccess` | `boolean` | no | `false` | **Required for `serverAuthCode`.** When `true`, native authorization requests offline access so sign-in and `requestScopes()` can return a server auth code for your backend. When `false` (default), `serverAuthCode` is **always `null`**. |
 | `hostedDomain` | `string \| null` | no | — | Restrict sign-in to a Google Workspace domain (e.g. `example.com`). |
 | `nonce` | `string \| null` | no | auto SHA-256 hex | Nonce embedded in the ID token. If omitted, native code generates a random SHA-256 hex nonce per request. |
 | `scopes` | `string[] \| null` | no | `[]` | OAuth scope URLs requested with sign-in / authorization (e.g. `https://www.googleapis.com/auth/drive.file`). |
@@ -132,9 +132,9 @@ Request **additional** OAuth scopes after the user is signed in. User may see a 
 
 | Field (result) | Type | Description |
 | -------------- | ---- | ----------- |
-| `serverAuthCode` | `string \| null` | Authorization code for your backend when `configure({ offlineAccess: true })` was used, or `null` if offline access was not enabled or the platform did not return a code. |
+| `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for your backend. **Non-null only when `configure({ offlineAccess: true })` was called before sign-in.** Otherwise always `null`, even if scope consent succeeds. |
 
-Requires prior successful sign-in (`configure()` + active session). When your backend needs a code for incremental scopes, pass `offlineAccess: true` in `configure()` before calling `requestScopes()`.
+Requires prior successful sign-in (`configure()` + active session). **`offlineAccess: true` in `configure()` is required** before calling `requestScopes()` when your backend needs a `serverAuthCode`.
 
 ---
 
@@ -241,7 +241,7 @@ interface OneTapSuccessData {
 | ----- | ---- | ----------- |
 | `user` | `OneTapUser` | Profile fields from Google ID token / credential. |
 | `idToken` | `string` | OpenID Connect ID token (JWT). Verify on your backend with Google’s keys. |
-| `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code when `offlineAccess: true` and/or scopes were granted; otherwise often `null` until `requestScopes` / authorization helper runs. |
+| `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for your backend. **Non-null only when `configure({ offlineAccess: true })` was used** before sign-in or `requestScopes()`. Otherwise always `null`. Exchange on your backend for refresh tokens. |
 
 ---
 
@@ -278,6 +278,10 @@ interface OneTapAuthorizationResult {
 ```
 
 Returned only from [`requestScopes()`](#requestscopesscopes-string-promiseonetapauthorizationresult).
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for the granted scopes. **Requires `configure({ offlineAccess: true })` before `requestScopes()`.** Without offline access, consent may succeed but this is always `null`. |
 
 ---
 
