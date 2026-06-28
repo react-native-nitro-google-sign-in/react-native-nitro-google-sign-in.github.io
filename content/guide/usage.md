@@ -149,7 +149,7 @@ See also [`requestScopes()` in the API reference](/docs/guide/api-reference#requ
 ```ts
 await GoogleOneTapSignIn.signOut()
 
-// iOS: disconnect app for user; Android CredMan: limited revoke support
+// Revokes app access / OAuth grant on both iOS and Android
 await GoogleOneTapSignIn.revokeAccess(userEmailOrId)
 ```
 

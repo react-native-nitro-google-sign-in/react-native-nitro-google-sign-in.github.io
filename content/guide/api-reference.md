@@ -153,7 +153,7 @@ Clears the Google Sign-In session in the native SDK.
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| `emailOrUniqueId` | `string` | User identifier (email or Google account id). **Android:** parameter is ignored; behaves like `signOut()`. **iOS:** `GIDSignIn.sharedInstance.disconnect` — revokes app access for the user. |
+| `emailOrUniqueId` | `string` | User identifier (email or Google account id). Revokes app access / OAuth grant for the user. |
 
 ---
 
@@ -533,7 +533,7 @@ Does **not** call `presentExplicitSignIn` unless `behavior === 'buttonFlow'`. Do
 | `createAccount` | All accounts (CredMan sheet) | Interactive sign-in |
 | `presentExplicitSignIn` | `GetSignInWithGoogleOption` dialog | Interactive sign-in |
 | `signOut` | Disables auto sign-in semantics | `GIDSignIn.signOut()` |
-| `revokeAccess` | Same as sign-out (param ignored) | `disconnect` |
+| `revokeAccess` | Revokes app access / OAuth grant | `disconnect` (revokes OAuth grant) |
 | `configure` + `autoDetect` | Needs `google-services.json` + Gradle | Needs plist `WEB_CLIENT_ID` + `CLIENT_ID` |
 | `iosClientId` | Ignored | Required via param or plist |
 
