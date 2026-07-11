@@ -74,6 +74,6 @@ await GoogleOneTapSignIn.signOut()
 
 ## Next
 
-- [Usage guide](/docs/guide/usage) — scopes, errors, button component
+- [Usage guide](/docs/guide/usage) — scopes, `getTokens`, errors, button component
 - [API reference](/docs/guide/api-reference)
 - [Troubleshooting](/docs/guide/troubleshooting)

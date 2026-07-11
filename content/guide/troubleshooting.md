@@ -141,6 +141,21 @@ On iOS, when calling `requestScopes()` or `signIn()` with scopes that the user h
 - **Force re-authorization via `presentExplicitSignIn()`**: Configure the library without the specific scopes (or with only basic scopes) and call `presentExplicitSignIn()`. This forces the account chooser browser sheet to display. Since Google OAuth supports incremental/cumulative consent, when your backend exchanges this fresh `serverAuthCode` for a refresh token, Google will issue a token containing all scopes the user has previously authorized.
 - **Or call `signOut()` first**: Calling `signOut()` resets the SDK's local keychain state, forcing the next sign-in flow to contact Google's servers and request a fresh `serverAuthCode`.
 
+## `getTokens()` returns the same access token on iOS
+
+On iOS, `getTokens()` returns the current in-memory access token while it is still valid. Google only issues a new access token when the current one is expired or marked for refresh.
+
+**Expected:** Two consecutive `getTokens()` calls without clearing may return the **same** access token string.
+
+**To force a refresh** (for example after a Google API returns 401):
+
+1. Call `clearCachedAccessToken(accessToken)` with the token that failed.
+2. Call `getTokens()` again — iOS performs a network refresh via AppAuth.
+
+On Android, `clearCachedAccessToken()` removes the token from `AuthorizationClient`'s local cache; the next `getTokens()` requests a new one from Google.
+
+See [Usage — Access tokens](/docs/guide/usage#access-tokens-gettokens).
+
 ## Still stuck?
 
 Open an issue with platform, RN version, Expo vs bare, and whether you use `autoDetect` or an explicit `webClientId`:

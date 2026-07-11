@@ -29,6 +29,7 @@ Complete TypeScript surface exported from `react-native-nitro-google-signin`. Fo
 | `OneTapSuccessData` | type | Success payload (`user`, `idToken`, `serverAuthCode`) |
 | `OneTapUser` | type | Profile fields on success |
 | `OneTapAuthorizationResult` | type | `requestScopes()` result |
+| `GetTokensResponse` | type | `getTokens()` result |
 | `OneTapSignInParams` | type | Placeholder (empty) for API parity |
 | `OneTapCreateAccountParams` | type | Placeholder (empty) for API parity |
 | `OneTapExplicitSignInParams` | type | Placeholder (empty) for API parity |
@@ -135,6 +136,43 @@ Request **additional** OAuth scopes after the user is signed in. User may see a 
 | `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for your backend. **Non-null only when `configure({ offlineAccess: true })` was called before sign-in.** Otherwise always `null`, even if scope consent succeeds. |
 
 Requires prior successful sign-in (`configure()` + active session). **`offlineAccess: true` in `configure()` is required** before calling `requestScopes()` when your backend needs a `serverAuthCode`.
+
+---
+
+### `getTokens(): Promise<GetTokensResponse>`
+
+Returns the current user's ID and OAuth access tokens after sign-in. Useful when migrating from `@react-native-google-signin/google-signin` or when you need to refresh tokens without re-running the account picker.
+
+| Field (result) | Type | Description |
+| -------------- | ---- | ----------- |
+| `idToken` | `string` | OpenID Connect ID token (JWT). |
+| `accessToken` | `string` | OAuth 2.0 access token for Google APIs. |
+
+| Platform | Native behavior |
+| -------- | ----------------- |
+| **Android** | Combines the cached ID token from the last Credential Manager sign-in with a fresh access token from `AuthorizationClient.authorize()`. May show a consent UI if scopes were not yet authorized. |
+| **iOS** | Reads tokens from the AppAuth session via `performAction(freshTokens:)`. Refreshes from Google when tokens are expired or after `clearCachedAccessToken()`. |
+
+**Throws:** `GoogleSignInError` with `SIGN_IN_REQUIRED` when no user is signed in.
+
+Prefer verifying `idToken` or exchanging `serverAuthCode` on your backend over sending raw access tokens from the client.
+
+:::info Migration from `@react-native-google-signin/google-signin`
+`GoogleOneTapSignIn.getTokens()` and `clearCachedAccessToken()` mirror the legacy API shape. On iOS, `clearCachedAccessToken()` is **not** a no-op — it marks the session for refresh so the next `getTokens()` can obtain new tokens after a 401.
+:::
+
+---
+
+### `clearCachedAccessToken(accessTokenString: string): Promise<void>`
+
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| `accessTokenString` | `string` | Access token to remove from the local cache. |
+
+| Platform | Behavior |
+| -------- | -------- |
+| **Android** | Calls `AuthorizationClient.clearToken()` — use when Google indicates the access token is invalid before retrying authorization. |
+| **iOS** | Calls `OIDAuthState.setNeedsTokenRefresh()` on the user's AppAuth session. The **next** `getTokens()` performs a network refresh. Validates that `accessTokenString` matches the current access token when non-empty. |
 
 ---
 
@@ -285,6 +323,24 @@ Returned only from [`requestScopes()`](#requestscopesscopes-string-promiseonetap
 
 ---
 
+### `GetTokensResponse`
+
+```ts
+interface GetTokensResponse {
+  idToken: string
+  accessToken: string
+}
+```
+
+Returned only from [`getTokens()`](#gettokens-promisegettokensresponse).
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `idToken` | `string` | OpenID Connect ID token (JWT). |
+| `accessToken` | `string` | OAuth 2.0 access token for Google APIs. |
+
+---
+
 ### Placeholder param types
 
 Reserved for API parity with the Universal One Tap surface (currently no fields):
@@ -364,7 +420,7 @@ type StatusCode = (typeof statusCodes)[keyof typeof statusCodes]
 | `ONE_TAP_START_FAILED` | Credential Manager / Google Sign-In request failed (not user cancel). |
 | `PLAY_SERVICES_NOT_AVAILABLE` | **Android** — Play Services missing or outdated (`checkPlayServices` or sign-in). |
 | `IN_PROGRESS` | No `Activity` / view controller, or sign-in called before `configure()`. |
-| `SIGN_IN_REQUIRED` | Reserved — user must sign in first. |
+| `SIGN_IN_REQUIRED` | User must sign in first (`getTokens()` when no active session). |
 | `SIGN_IN_CANCELLED` | Reserved / parity — prefer `isCancelledResponse()` on responses. |
 
 ### `isErrorWithCode(error: unknown): error is GoogleSignInError`
@@ -536,6 +592,8 @@ Does **not** call `presentExplicitSignIn` unless `behavior === 'buttonFlow'`. Do
 | `signIn` | Credential Manager (authorized accounts) | Current user or restore |
 | `createAccount` | All accounts (CredMan sheet) | Interactive sign-in |
 | `presentExplicitSignIn` | `GetSignInWithGoogleOption` dialog | Interactive sign-in |
+| `getTokens` | Cached ID token + `AuthorizationClient` access token | AppAuth `performAction(freshTokens:)` |
+| `clearCachedAccessToken` | Clears local access token cache | Marks session for forced refresh |
 | `signOut` | Disables auto sign-in semantics | `GIDSignIn.signOut()` |
 | `revokeAccess` | Revokes app access / OAuth grant | `disconnect` (revokes OAuth grant) |
 | `configure` + `autoDetect` | Needs `google-services.json` + Gradle | Needs plist `WEB_CLIENT_ID` + `CLIENT_ID` |

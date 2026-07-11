@@ -148,6 +148,69 @@ You can pass baseline scopes in `configure({ scopes })` and call `requestScopes(
 
 See also [`requestScopes()` in the API reference](/docs/guide/api-reference#requestscopesscopes-string-promiseonetapauthorizationresult). Example apps: [bare `example/App.tsx`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/example/App.tsx) · [Expo `example-expo/App.tsx`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/example-expo/App.tsx).
 
+## Access tokens (`getTokens`)
+
+Use `getTokens()` when you need the current user's **ID token and OAuth access token** after sign-in — for example when migrating from `@react-native-google-signin/google-signin`:
+
+```ts
+import {
+  GoogleOneTapSignIn,
+  isSuccessResponse,
+  isErrorWithCode,
+  statusCodes,
+} from 'react-native-nitro-google-signin'
+
+const signInAndFetchTokens = async () => {
+  const response = await GoogleOneTapSignIn.signIn()
+
+  if (!isSuccessResponse(response)) return
+
+  try {
+    const { idToken, accessToken } = await GoogleOneTapSignIn.getTokens()
+    // Prefer verifying idToken on your backend, or exchange serverAuthCode
+    console.log(idToken.slice(0, 16), accessToken.slice(0, 16))
+  } catch (e) {
+    if (isErrorWithCode(e) && e.code === statusCodes.SIGN_IN_REQUIRED) {
+      // User session expired — run sign-in again
+    }
+  }
+}
+```
+
+| Platform | Behavior |
+| -------- | -------- |
+| **Android** | Returns the ID token cached from the last Credential Manager sign-in plus a fresh access token from `AuthorizationClient`. May show a consent UI if scopes were not yet authorized. |
+| **iOS** | Uses the AppAuth session behind `GIDSignIn`. Refreshes tokens from Google when expired or after `clearCachedAccessToken()`. |
+
+:::tip Backend auth
+Google recommends verifying the **`idToken`** on your server or exchanging a **`serverAuthCode`** (with `offlineAccess: true`) for refresh tokens. Client-side access tokens are mainly for calling Google APIs from the device.
+:::
+
+### Invalid access token (`clearCachedAccessToken`)
+
+If a Google API returns **401** or otherwise indicates the access token is stale, clear the local cache and fetch again:
+
+```ts
+try {
+  await callGoogleApi(accessToken)
+} catch (e) {
+  if (isInvalidTokenError(e)) {
+    await GoogleOneTapSignIn.clearCachedAccessToken(accessToken)
+    const { accessToken: freshToken } = await GoogleOneTapSignIn.getTokens()
+    await callGoogleApi(freshToken)
+  }
+}
+```
+
+| Platform | `clearCachedAccessToken` | Next `getTokens()` |
+| -------- | ------------------------ | ------------------- |
+| **Android** | Removes the token from `AuthorizationClient`'s local cache | Fetches a new access token from Google |
+| **iOS** | Marks the AppAuth session with `setNeedsTokenRefresh()` | Performs a network refresh and returns new tokens |
+
+On **iOS**, calling `getTokens()` twice in a row **without** clearing first may return the same access token while it is still valid — that is expected. Call `clearCachedAccessToken()` first when you know the token is invalid.
+
+See [`getTokens()`](/docs/guide/api-reference#gettokens-promisegettokensresponse) and [`clearCachedAccessToken()`](/docs/guide/api-reference#clearcachedaccesstokenaccesstokenstring-string-promisevoid) in the API reference.
+
 ## Sign out and revoke
 
 ```ts

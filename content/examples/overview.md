@@ -53,7 +53,7 @@ See [`example-expo/README.md`](https://github.com/react-native-nitro-google-sign
 
 - `GoogleOneTapSignIn.configure`
 - One Tap flow: `signIn` → `createAccount` → `presentExplicitSignIn`
-- `GoogleSignInButton` and optional `requestScopes`
+- `GoogleSignInButton`, optional `requestScopes`, and `getTokens` / `clearCachedAccessToken`
 
 ## Sign-in demos
 
