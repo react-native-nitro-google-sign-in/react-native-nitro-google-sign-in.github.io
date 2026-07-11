@@ -20,6 +20,26 @@ GoogleOneTapSignIn.configure({
 })
 ```
 
+## Backend verification
+
+This library returns Google-issued `idToken` and `serverAuthCode` values to JavaScript. **Your backend must verify every token** — never trust the client alone.
+
+| Check | Action |
+| ----- | ------ |
+| **Signature** | Verify RS256 with Google JWKS (`https://www.googleapis.com/oauth2/v3/certs`). |
+| **`aud`** | Must equal your **Web OAuth client ID**. |
+| **`iss`** | Must be `accounts.google.com` or `https://accounts.google.com`. |
+| **`exp`** | Reject expired tokens. |
+| **`nonce`** | If you set `configure({ nonce })`, verify the JWT `nonce` claim matches your server-issued value. |
+| **`hd`** | If you use `hostedDomain`, validate the JWT `hd` claim on the server. |
+| **`serverAuthCode`** | Exchange only on your backend with the client secret; never log full codes in analytics or UI. |
+
+Full checklist: [SECURITY.md](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/SECURITY.md) in the repository.
+
+:::tip iOS silent `signIn()` and `serverAuthCode`
+With `offlineAccess: true`, iOS **silent** `signIn()` / restore returns `serverAuthCode: null`. Use `createAccount()` or `presentExplicitSignIn()` for the initial offline grant that returns a code.
+:::
+
 ## Recommended sign-in flow
 
 Same cascade as the [Usage guide](/docs/guide/usage) and [Quick Start](/docs/getting-started/quick-start):
@@ -216,9 +236,17 @@ See [`getTokens()`](/docs/guide/api-reference#gettokens-promisegettokensresponse
 ```ts
 await GoogleOneTapSignIn.signOut()
 
-// Revokes app access / OAuth grant on both iOS and Android
 await GoogleOneTapSignIn.revokeAccess(userEmailOrId)
 ```
+
+| Platform | `revokeAccess` |
+| -------- | -------------- |
+| **Android** | Resolves the account by email or `OneTapUser.id`. |
+| **iOS** | Revokes only the **current** signed-in session. Throws if `userEmailOrId` does not match the active user — call `signIn()` first when revoking a specific stored account. |
+
+:::warning Google Workspace (`hostedDomain`)
+Client-side domain filtering is a convenience only. **Always validate the JWT `hd` claim on your backend.** On Android, `GoogleSignInButton` with `signInBehavior="buttonFlow"` validates `hd` after sign-in; Credential Manager flows filter at request time.
+:::
 
 ## Errors
 

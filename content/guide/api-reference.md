@@ -58,7 +58,7 @@ Singleton-style object backed by the Nitro hybrid `NitroGoogleSignin`. Call **`c
 | `webClientId` | `string` | yes | — | Web OAuth 2.0 client ID (`*.apps.googleusercontent.com`), or `'autoDetect'` to read from native config ([Android](/docs/setup/android) `default_web_client_id`, iOS `WEB_CLIENT_ID` in plist). |
 | `iosClientId` | `string \| null` | no | plist `CLIENT_ID` | iOS OAuth client ID for `GIDConfiguration.clientID`. **iOS:** required via this field or `GoogleService-Info.plist` `CLIENT_ID`. Ignored on Android. |
 | `offlineAccess` | `boolean` | no | `false` | **Required for `serverAuthCode`.** When `true`, native authorization requests offline access so sign-in and `requestScopes()` can return a server auth code for your backend. When `false` (default), `serverAuthCode` is **always `null`**. |
-| `hostedDomain` | `string \| null` | no | — | Restrict sign-in to a Google Workspace domain (e.g. `example.com`). |
+| `hostedDomain` | `string \| null` | no | — | Restrict sign-in to a Google Workspace domain (e.g. `example.com`). **Android:** Credential Manager flows (`signIn`, `createAccount`) filter at request time; `presentExplicitSignIn` / `buttonFlow` validates the JWT `hd` claim after sign-in. **iOS:** `GIDConfiguration.hostedDomain`. **Always validate `hd` on your backend** — do not rely on client-side filtering alone. |
 | `nonce` | `string \| null` | no | auto SHA-256 hex | Nonce embedded in the ID token. If omitted, native code generates a random SHA-256 hex nonce per request. |
 | `scopes` | `string[] \| null` | no | `[]` | OAuth scope URLs requested with sign-in / authorization (e.g. `https://www.googleapis.com/auth/drive.file`). |
 | `autoSelectOnSignIn` | `boolean` | no | `false` | **Android:** when `true`, `signIn()` may auto-select if exactly one authorized account exists. When `false`, shows account UI when possible. |
@@ -92,8 +92,8 @@ Attempts a low-friction sign-in without forcing the full account picker when pos
 
 | Platform | Native behavior |
 | -------- | ----------------- |
-| **Android** | Credential Manager with **authorized accounts only** (`filterByAuthorizedAccounts: true`). Respects `autoSelectOnSignIn`. |
-| **iOS** | If `GIDSignIn.sharedInstance.currentUser` exists → success; else `restorePreviousSignIn()`. |
+| **Android** | Credential Manager with **authorized accounts only** (`filterByAuthorizedAccounts: true`). Respects `autoSelectOnSignIn`. When `offlineAccess: true`, may follow with `AuthorizationClient` to attach a `serverAuthCode`. |
+| **iOS** | If `GIDSignIn.sharedInstance.currentUser` exists → success; else `restorePreviousSignIn()`. **Silent restore returns `serverAuthCode: null`** even when `offlineAccess: true` — use `createAccount()` or `presentExplicitSignIn()` for the initial offline grant. |
 
 Returns [`OneTapResponse`](#onetapresponse) (never throws for user cancel — use `type: 'cancelled'`).
 
@@ -116,7 +116,7 @@ Explicit **Sign in with Google** UI.
 
 | Platform | Native behavior |
 | -------- | ----------------- |
-| **Android** | `GetSignInWithGoogleOption` — account dialog (all accounts, add account). |
+| **Android** | `GetSignInWithGoogleOption` — account dialog (all accounts, add account). When `hostedDomain` is configured, validates the JWT `hd` claim after sign-in. |
 | **iOS** | Same interactive sign-in as `createAccount()`. |
 
 Use when you want the traditional button-style account chooser on Android instead of the Credential Manager bottom sheet.
@@ -191,7 +191,12 @@ Clears the Google Sign-In session in the native SDK.
 
 | Parameter | Type | Description |
 | --------- | ---- | ----------- |
-| `emailOrUniqueId` | `string` | User identifier (email or Google account id). Revokes app access / OAuth grant for the user. |
+| `emailOrUniqueId` | `string` | User email or stable Google account id (`OneTapUser.id`). |
+
+| Platform | Behavior |
+| -------- | -------- |
+| **Android** | Resolves the account from `emailOrUniqueId` and revokes via `AuthorizationClient.revokeAccess()`. |
+| **iOS** | Revokes only the **current signed-in session** via `GIDSignIn.disconnect()`. Throws if `emailOrUniqueId` does not match the active user's id or email. Call `signIn()` first when revoking a specific stored account. |
 
 ---
 
@@ -589,13 +594,14 @@ Does **not** call `presentExplicitSignIn` unless `behavior === 'buttonFlow'`. Do
 | API | Android | iOS |
 | --- | ------- | --- |
 | `checkPlayServices` | Validates Play Services | No-op |
-| `signIn` | Credential Manager (authorized accounts) | Current user or restore |
+| `signIn` | Credential Manager (authorized accounts); may attach `serverAuthCode` when `offlineAccess: true` | Current user or restore; **silent path: `serverAuthCode: null`** |
 | `createAccount` | All accounts (CredMan sheet) | Interactive sign-in |
-| `presentExplicitSignIn` | `GetSignInWithGoogleOption` dialog | Interactive sign-in |
+| `presentExplicitSignIn` | `GetSignInWithGoogleOption` dialog; validates JWT `hd` when `hostedDomain` set | Interactive sign-in |
 | `getTokens` | Cached ID token + `AuthorizationClient` access token | AppAuth `performAction(freshTokens:)` |
 | `clearCachedAccessToken` | Clears local access token cache | Marks session for forced refresh |
 | `signOut` | Disables auto sign-in semantics | `GIDSignIn.signOut()` |
-| `revokeAccess` | Revokes app access / OAuth grant | `disconnect` (revokes OAuth grant) |
+| `revokeAccess` | Revokes by email or user id | Current session only; throws if id mismatch |
+| `hostedDomain` | CredMan filters at request; button flow validates JWT `hd` post sign-in | `GIDConfiguration.hostedDomain` |
 | `configure` + `autoDetect` | Needs `google-services.json` + Gradle | Needs plist `WEB_CLIENT_ID` + `CLIENT_ID` |
 | `iosClientId` | Ignored | Required via param or plist |
 

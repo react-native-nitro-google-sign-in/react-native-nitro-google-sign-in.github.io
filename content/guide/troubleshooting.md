@@ -131,7 +131,27 @@ Call `checkPlayServices()` and use an emulator image **with Google Play**.
 
 ## Platform-specific behavior
 
-Platform differences for `signOut()`, `revokeAccess()`, and scope requests are documented in [Usage](/docs/guide/usage) and the [API reference](/docs/guide/api-reference).
+Platform differences for `signOut()`, `revokeAccess()`, `hostedDomain`, and scope requests are documented in [Usage](/docs/guide/usage) and the [API reference](/docs/guide/api-reference).
+
+## Google Workspace: `hostedDomain` rejected on button flow (Android)
+
+When `hostedDomain` is configured and you use `presentExplicitSignIn()` or `GoogleSignInButton` with `signInBehavior="buttonFlow"`, sign-in **fails** if the signed-in account's JWT `hd` claim does not match the configured domain (for example a consumer `@gmail.com` account when you require `corp.example.com`).
+
+Credential Manager flows (`signIn`, `createAccount`, `signInBehavior="credentialManager"`) apply the domain filter during the request.
+
+**Always validate `hd` on your backend** — client-side checks are not sufficient on their own.
+
+## iOS: `revokeAccess` throws "does not match the current signed-in user"
+
+On iOS, `revokeAccess(emailOrUniqueId)` only disconnects the **active** session. If you pass an email or id that is not the currently signed-in user, the call throws.
+
+Call `signIn()` (or ensure the target account is the current user) before `revokeAccess()`, or use `signOut()` for a local session clear.
+
+## iOS: Missing `serverAuthCode` on silent `signIn()` with `offlineAccess: true`
+
+Even when `offlineAccess: true` is set, iOS **silent** `signIn()` and `restorePreviousSignIn()` return `serverAuthCode: null`. This is expected — Google only issues a server auth code during an interactive authorization flow.
+
+Use `createAccount()` or `presentExplicitSignIn()` for the initial offline grant.
 
 ## iOS: Missing `serverAuthCode` when scopes are already granted
 
