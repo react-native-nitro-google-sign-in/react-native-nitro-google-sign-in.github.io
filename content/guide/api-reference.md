@@ -233,7 +233,7 @@ type OneTapResponseType =
 | ----- | ------- |
 | `'success'` | User signed in; `data` is [`OneTapSuccessData`](#onetapsuccessdata). |
 | `'noSavedCredentialFound'` | No saved credential / no previous sign-in to restore — run `createAccount()` or `presentExplicitSignIn()` next. |
-| `'cancelled'` | User dismissed UI (not an thrown error). |
+| `'cancelled'` | User dismissed UI (not an thrown error). On **Android**, Credential Manager also returns this when OAuth is misconfigured (missing release / Play App Signing SHA-1) — see [troubleshooting](/docs/guide/troubleshooting#cancelled-after-account-pick). |
 
 ---
 
@@ -415,6 +415,7 @@ const statusCodes = {
   IN_PROGRESS: 'IN_PROGRESS',
   SIGN_IN_REQUIRED: 'SIGN_IN_REQUIRED',
   SIGN_IN_CANCELLED: 'SIGN_IN_CANCELLED',
+  DEVELOPER_ERROR: 'DEVELOPER_ERROR',
 } as const
 
 type StatusCode = (typeof statusCodes)[keyof typeof statusCodes]
@@ -426,7 +427,8 @@ type StatusCode = (typeof statusCodes)[keyof typeof statusCodes]
 | `PLAY_SERVICES_NOT_AVAILABLE` | **Android** — Play Services missing or outdated (`checkPlayServices` or sign-in). |
 | `IN_PROGRESS` | No `Activity` / view controller, or sign-in called before `configure()`. |
 | `SIGN_IN_REQUIRED` | User must sign in first (`getTokens()` when no active session). |
-| `SIGN_IN_CANCELLED` | Reserved / parity — prefer `isCancelledResponse()` on responses. |
+| `SIGN_IN_CANCELLED` | Reserved / parity — prefer `isCancelledResponse()` on responses. Also thrown from Android authorization UI cancel. |
+| `DEVELOPER_ERROR` | **Android** — OAuth misconfiguration surfaced by Credential Manager / AuthorizationClient (wrong SHA-1, package, or client ID). Note: many SHA-1 issues still appear as `type: 'cancelled'` — see [troubleshooting](/docs/guide/troubleshooting#cancelled-after-account-pick). |
 
 ### `isErrorWithCode(error: unknown): error is GoogleSignInError`
 

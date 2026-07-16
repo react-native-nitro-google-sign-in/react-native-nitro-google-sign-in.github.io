@@ -126,6 +126,8 @@ Register the fingerprint in **Google Cloud** (Android OAuth client) and/or **Fir
 
 :::info Required for release
 **Why:** Play Store builds use different certificates. Add **release** and **Play App Signing** SHA-1 values before shipping production.
+
+If production sign-in shows the account picker then returns `type: 'cancelled'`, the Play App Signing SHA-1 is almost certainly missing — see [troubleshooting](/docs/guide/troubleshooting#cancelled-after-account-pick).
 :::
 
 ---

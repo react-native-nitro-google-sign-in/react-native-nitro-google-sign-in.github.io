@@ -109,6 +109,26 @@ Sign-in works in **debug** but crashes or no-ops in **release** after enabling `
 
 See [Android — Credential Manager checklist](/docs/setup/android#credential-manager-and-gms).
 
+## `type: 'cancelled'` after picking a Google account (Android production) {#cancelled-after-account-pick}
+
+Credential Manager often reports OAuth misconfiguration as **user cancellation**, not `DEVELOPER_ERROR`.
+
+**Symptom:** Account picker / Sign in with Google UI appears → user selects an account → JS receives `type: 'cancelled'` (not a thrown error). Works in **debug**, fails on **release / Play Store** builds.
+
+**Cause:** Google validates the app’s signing certificate against the **Android** OAuth client. Debug builds use the debug keystore SHA-1; Play builds use the **Play App Signing** certificate (different from your upload keystore). If that SHA-1 is missing, Play services closes the flow with `RESULT_CANCELED`, which this library maps to `type: 'cancelled'`.
+
+**Fix:**
+
+1. Open [Play Console → App integrity → App signing](https://play.google.com/console) and copy the **App signing key certificate** SHA-1 (and SHA-256 if you use Firebase).
+2. Also register your **upload key** SHA-1 if you test local `assembleRelease` / sideloaded release APKs.
+3. Add those fingerprints to the **Android** OAuth client (same package name as `applicationId`) in [Google Cloud Console](https://console.cloud.google.com/apis/credentials) and/or Firebase Project settings.
+4. Confirm `configure({ webClientId })` uses the **Web** client ID from the **same** Google Cloud project — never the Android client ID.
+5. Rebuild and reinstall the production/release binary (Metro reload is not enough). Changes to OAuth clients can take a few minutes to propagate.
+
+Logcat will include a `GoogleSignInController` warning when Credential Manager returns cancellation, pointing at SHA-1 checks.
+
+See [Android SHA-1](/docs/setup/google-cloud#android-sha-1) and [DEVELOPER_ERROR](#developer_error--sign-in-fails-immediately-android).
+
 ## Nitro / TurboModule not found
 
 - Rebuild native app after installing the package
