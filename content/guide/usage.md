@@ -258,7 +258,8 @@ Thrown errors are `GoogleSignInError` with a `code` from `statusCodes`:
 | `PLAY_SERVICES_NOT_AVAILABLE` | Android Play Services issue |
 | `IN_PROGRESS` | Another sign-in in progress |
 | `SIGN_IN_REQUIRED` | User must sign in |
-| `SIGN_IN_CANCELLED` | User cancelled |
+| `SIGN_IN_CANCELLED` | User cancelled (authorization UI) |
+| `DEVELOPER_ERROR` | Android OAuth misconfiguration (SHA-1 / package / client ID) |
 
 ```ts
 try {
@@ -270,7 +271,7 @@ try {
 }
 ```
 
-Cancelled **responses** (not throws) use `isCancelledResponse(response)`.
+Cancelled **responses** (not throws) use `isCancelledResponse(response)`. On Android production builds, `type: 'cancelled'` after picking an account often means a missing Play App Signing SHA-1 — see [troubleshooting](/docs/guide/troubleshooting#cancelled-after-account-pick).
 
 ## Native sign-in button
 
