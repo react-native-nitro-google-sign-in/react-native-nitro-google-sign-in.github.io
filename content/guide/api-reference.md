@@ -26,7 +26,7 @@ Complete TypeScript surface exported from `react-native-nitro-google-signin`. Fo
 | `OneTapConfigureParams` | type | `configure()` options |
 | `OneTapResponse` | type | Sign-in method return value |
 | `OneTapResponseType` | type | `'success' \| 'noSavedCredentialFound' \| 'cancelled'` |
-| `OneTapSuccessData` | type | Success payload (`user`, `idToken`, `serverAuthCode`) |
+| `OneTapSuccessData` | type | Success payload (`user`, `scopes`, `idToken`, `serverAuthCode`) |
 | `OneTapUser` | type | Profile fields on success |
 | `OneTapAuthorizationResult` | type | `requestScopes()` result |
 | `GetTokensResponse` | type | `getTokens()` result |
@@ -141,6 +141,36 @@ Requires prior successful sign-in (`configure()` + active session). Use `accessT
 **Cancel behavior:** on iOS, user cancel resolves with `{ accessToken: null, serverAuthCode: null }`. On Android, cancel throws `SIGN_IN_CANCELLED` (no null-token result).
 
 Works after sign-in via the imperative API (`signIn` / `createAccount` / `presentExplicitSignIn`) or hooks such as `useGoogleSignInFromButton`.
+
+To avoid duplicate consent for existing users, call [`getCurrentUser()`](#getcurrentuser-onetapsuccessdata--null) and check `scopes` before `requestScopes()`.
+
+---
+
+### `getCurrentUser(): OneTapSuccessData | null`
+
+Returns the currently signed-in user and granted scopes, or `null` if no session. **Synchronous** (no Promise) — mirrors `@react-native-google-signin/google-signin`.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| `user` | `OneTapUser` | Profile from the last sign-in. |
+| `scopes` | `string[]` | OAuth scopes currently granted for this user. |
+| `idToken` | `string` | Cached OpenID Connect ID token (JWT). |
+| `serverAuthCode` | `string \| null` | Always `null` here — auth codes are one-time and not persisted. |
+
+| Platform | Native behavior |
+| -------- | ----------------- |
+| **Android** | Reads the last Credential Manager session (profile, scopes, id token) from encrypted storage. |
+| **iOS** | Reads `GIDSignIn.sharedInstance.currentUser`, including `grantedScopes`. |
+
+Use this to decide whether [`requestScopes()`](#requestscopesscopes-string-promiseonetapauthorizationresult) is needed after you add a new scope for existing users:
+
+```ts
+const DRIVE = 'https://www.googleapis.com/auth/drive.file'
+const current = GoogleOneTapSignIn.getCurrentUser()
+if (current && !current.scopes.includes(DRIVE)) {
+  await GoogleOneTapSignIn.requestScopes([DRIVE])
+}
+```
 
 ---
 
@@ -280,6 +310,7 @@ interface OneTapResponse {
 ```ts
 interface OneTapSuccessData {
   user: OneTapUser
+  scopes: string[]
   idToken: string
   serverAuthCode: string | null
 }
@@ -288,8 +319,9 @@ interface OneTapSuccessData {
 | Field | Type | Description |
 | ----- | ---- | ----------- |
 | `user` | `OneTapUser` | Profile fields from Google ID token / credential. |
+| `scopes` | `string[]` | OAuth scopes granted for this user. **Android:** from configure + `requestScopes`. **iOS:** `GIDGoogleUser.grantedScopes`. Also returned by [`getCurrentUser()`](#getcurrentuser-onetapsuccessdata--null). |
 | `idToken` | `string` | OpenID Connect ID token (JWT). Verify on your backend with Google’s keys. |
-| `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for your backend. **Non-null only when `configure({ offlineAccess: true })` was used** before sign-in or `requestScopes()`. Otherwise always `null`. Exchange on your backend for refresh tokens. |
+| `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for your backend. **Non-null only when `configure({ offlineAccess: true })` was used** before sign-in or `requestScopes()`. Otherwise always `null`. Exchange on your backend for refresh tokens. Always `null` from `getCurrentUser()`. |
 
 ---
 

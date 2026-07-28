@@ -75,6 +75,7 @@ For on-device Google API calls after `requestScopes()`, use the returned **`acce
 | -------- | --- | ----------- |
 | **At first sign-in** | `configure({ scopes, offlineAccess })` | You know required scopes before the user signs in. Consent may appear during sign-in. |
 | **Later** | `requestScopes(scopes)` | User is already signed in; request extra access when they use a feature (e.g. “Connect calendar”). |
+| **Inspect granted** | `getCurrentUser()` | Check `scopes` before calling `requestScopes()` so existing users are not prompted again. |
 
 ### Option A — scopes at configure time
 
@@ -141,6 +142,12 @@ const signInThenRequestScopesLater = async () => {
 }
 
 const enableCalendarAccess = async () => {
+  const current = GoogleOneTapSignIn.getCurrentUser()
+  if (current?.scopes.includes(CALENDAR_READONLY)) {
+    // Already granted — skip consent UI
+    return
+  }
+
   const { accessToken, serverAuthCode } = await GoogleOneTapSignIn.requestScopes([
     CALENDAR_READONLY,
   ])
