@@ -138,6 +138,8 @@ Request **additional** OAuth scopes after the user is signed in. User may see a 
 
 Requires prior successful sign-in (`configure()` + active session). Use `accessToken` for on-device Google API calls (Drive, Calendar, etc.). Set **`offlineAccess: true`** only when your backend needs a `serverAuthCode`.
 
+**Cancel behavior:** on iOS, user cancel resolves with `{ accessToken: null, serverAuthCode: null }`. On Android, cancel throws `SIGN_IN_CANCELLED` (no null-token result).
+
 Works after sign-in via the imperative API (`signIn` / `createAccount` / `presentExplicitSignIn`) or hooks such as `useGoogleSignInFromButton`.
 
 ---
@@ -328,7 +330,7 @@ Returned only from [`requestScopes()`](#requestscopesscopes-string-promiseonetap
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
-| `accessToken` | `string \| null` | OAuth 2.0 access token for the granted scopes (on-device Google API calls). Present when consent succeeds, regardless of `offlineAccess`. |
+| `accessToken` | `string \| null` | OAuth 2.0 access token for the granted scopes (on-device Google API calls). Present when consent succeeds, regardless of `offlineAccess`. On iOS cancel: `null`. On Android cancel: throws `SIGN_IN_CANCELLED` instead. |
 | `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for the granted scopes. **Requires `configure({ offlineAccess: true })` before `requestScopes()`.** Without offline access, consent may succeed but this is always `null`. |
 
 ---
