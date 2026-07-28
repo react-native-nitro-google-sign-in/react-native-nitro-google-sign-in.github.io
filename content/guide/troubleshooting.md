@@ -173,6 +173,36 @@ Even when `offlineAccess: true` is set, iOS **silent** `signIn()` and `restorePr
 
 Use `createAccount()` or `presentExplicitSignIn()` for the initial offline grant.
 
+## Android: Sign-in hangs after enabling `offlineAccess: true`
+
+If sign-in (imperative API or `useGoogleSignInFromButton`) appears to hang after you add `offlineAccess: true` to `configure()`, update to a release that no longer forces `AuthorizationRequest.Prompt.CONSENT` on every offline authorization. Forcing consent immediately after Credential Manager could leave the PendingIntent unresolved.
+
+Also ensure:
+
+1. You rebuild the native app after upgrading the library (Metro reload is not enough).
+2. The Web client ID in `configure({ webClientId })` is correct (not the Android client ID).
+3. Debug/release/Play App Signing SHA-1 fingerprints are registered on the Android OAuth client.
+
+## Android: `requestScopes()` returns `{ serverAuthCode: null }` with no consent UI
+
+`serverAuthCode` is **always `null`** unless `configure({ offlineAccess: true })`. That is expected when you only need on-device API access.
+
+Use the **`accessToken`** field from `requestScopes()` to call Google APIs (Drive, Calendar, etc.):
+
+```ts
+const { accessToken, serverAuthCode } = await GoogleOneTapSignIn.requestScopes([
+  'https://www.googleapis.com/auth/drive.file',
+])
+// accessToken — call Google APIs from the device
+// serverAuthCode — only non-null when offlineAccess: true
+```
+
+If consent still does not appear for a **new** scope:
+
+1. Confirm the user signed in successfully first (imperative or hook).
+2. Add the scope on the [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent) and enable the related Google API.
+3. Rebuild the native app after upgrading this library.
+
 ## iOS: Missing `serverAuthCode` when scopes are already granted
 
 On iOS, when calling `requestScopes()` or `signIn()` with scopes that the user has already approved in the past, the native iOS SDK returns a local error `scopesAlreadyGranted` (`-8`) and does not contact Google's authorization servers. As a result, no new one-time `serverAuthCode` is issued.

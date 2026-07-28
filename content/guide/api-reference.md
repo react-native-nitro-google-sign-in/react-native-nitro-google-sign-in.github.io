@@ -133,9 +133,12 @@ Request **additional** OAuth scopes after the user is signed in. User may see a 
 
 | Field (result) | Type | Description |
 | -------------- | ---- | ----------- |
+| `accessToken` | `string \| null` | OAuth 2.0 access token for calling Google APIs from the device. Returned when consent succeeds, even if `offlineAccess` is `false`. |
 | `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for your backend. **Non-null only when `configure({ offlineAccess: true })` was called before sign-in.** Otherwise always `null`, even if scope consent succeeds. |
 
-Requires prior successful sign-in (`configure()` + active session). **`offlineAccess: true` in `configure()` is required** before calling `requestScopes()` when your backend needs a `serverAuthCode`.
+Requires prior successful sign-in (`configure()` + active session). Use `accessToken` for on-device Google API calls (Drive, Calendar, etc.). Set **`offlineAccess: true`** only when your backend needs a `serverAuthCode`.
+
+Works after sign-in via the imperative API (`signIn` / `createAccount` / `presentExplicitSignIn`) or hooks such as `useGoogleSignInFromButton`.
 
 ---
 
@@ -316,6 +319,7 @@ interface OneTapUser {
 
 ```ts
 interface OneTapAuthorizationResult {
+  accessToken: string | null
   serverAuthCode: string | null
 }
 ```
@@ -324,6 +328,7 @@ Returned only from [`requestScopes()`](#requestscopesscopes-string-promiseonetap
 
 | Field | Type | Description |
 | ----- | ---- | ----------- |
+| `accessToken` | `string \| null` | OAuth 2.0 access token for the granted scopes (on-device Google API calls). Present when consent succeeds, regardless of `offlineAccess`. |
 | `serverAuthCode` | `string \| null` | OAuth 2.0 server auth code for the granted scopes. **Requires `configure({ offlineAccess: true })` before `requestScopes()`.** Without offline access, consent may succeed but this is always `null`. |
 
 ---

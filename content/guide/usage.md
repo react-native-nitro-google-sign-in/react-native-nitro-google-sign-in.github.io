@@ -67,6 +67,8 @@ Request Google API permissions beyond basic profile / ID token. Always use **ful
 
 :::warning `offlineAccess: true` required for `serverAuthCode`
 To receive a `serverAuthCode` — from sign-in (`response.data.serverAuthCode`) or from `requestScopes()` — you **must** pass `offlineAccess: true` in `configure()`. The default is `false`; without it, `serverAuthCode` is always `null` even when scopes are granted.
+
+For on-device Google API calls after `requestScopes()`, use the returned **`accessToken`** — that works with or without `offlineAccess`.
 :::
 
 | Approach | API | When to use |
@@ -112,7 +114,7 @@ const signInWithScopesUpFront = async () => {
 
 ### Option B — scopes after sign-in (`requestScopes`)
 
-Configure with **`offlineAccess: true`** (required for `serverAuthCode`), sign in, then call `requestScopes()` when needed. The user may see a consent screen:
+Sign in first, then call `requestScopes()` when a feature needs extra Google API access. The user may see a consent screen. Use the returned **`accessToken`** to call Google APIs from the device. Set **`offlineAccess: true`** only if you also need a `serverAuthCode` for your backend:
 
 ```ts
 import {
@@ -124,7 +126,7 @@ const CALENDAR_READONLY = 'https://www.googleapis.com/auth/calendar.readonly'
 
 GoogleOneTapSignIn.configure({
   webClientId: 'autoDetect',
-  offlineAccess: true,
+  // offlineAccess: true, // only if you need serverAuthCode for your backend
 })
 
 const signInThenRequestScopesLater = async () => {
@@ -139,12 +141,19 @@ const signInThenRequestScopesLater = async () => {
 }
 
 const enableCalendarAccess = async () => {
-  const { serverAuthCode } = await GoogleOneTapSignIn.requestScopes([
+  const { accessToken, serverAuthCode } = await GoogleOneTapSignIn.requestScopes([
     CALENDAR_READONLY,
   ])
 
+  if (accessToken) {
+    // Call Google APIs from the device
+    await fetch('https://www.googleapis.com/calendar/v3/users/me/calendarList', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+  }
+
   if (serverAuthCode) {
-    // Send to your backend to store refresh tokens
+    // Send to your backend to store refresh tokens (requires offlineAccess: true)
     await fetch('https://your-api.example/auth/google/exchange', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -155,11 +164,12 @@ const enableCalendarAccess = async () => {
 ```
 
 :::info Requires prior sign-in
-`requestScopes()` only works after a successful sign-in (`configure()` + active session). Call it from a button handler or feature gate, not before the user has signed in.
+`requestScopes()` only works after a successful sign-in (`configure()` + active session). Call it from a button handler or feature gate, not before the user has signed in. Sign-in can use the imperative API or `useGoogleSignInFromButton`.
 :::
 
-:::tip `serverAuthCode` from `requestScopes()`
-`offlineAccess: true` in `configure()` is **required** before calling `requestScopes()` if your backend needs an authorization code. Without offline access, scope consent may succeed but `serverAuthCode` will always be `null`.
+:::tip `accessToken` vs `serverAuthCode`
+- **`accessToken`** — for on-device Google API calls. Returned when consent succeeds, even with `offlineAccess: false`.
+- **`serverAuthCode`** — for your backend to exchange for refresh tokens. Requires `offlineAccess: true` in `configure()`. Without it, consent may succeed but `serverAuthCode` stays `null`.
 :::
 
 :::tip Combine both
