@@ -47,13 +47,23 @@ The Swift pod `AppCheckCore` depends upon `GoogleUtilities` and `RecaptchaIntero
 which do not define modules. To opt into those targets generating module maps...
 ```
 
-This happens when CocoaPods resolves **AppCheckCore 11.3.0** (pulled in by Google Sign-In) under Expo’s default **static** pod setup.
+This happens when CocoaPods resolves **AppCheckCore ≥ 11.3** (from Google Sign-In 9.2+ and/or `@react-native-firebase/app-check`) under Expo’s default **static** pod setup.
+
+A related failure with Firebase App Check looks like:
+
+```text
+CocoaPods could not find compatible versions for pod "AppCheckCore":
+  AppCheckCore (< 11.3.0)
+  AppCheckCore (~> 11.3)
+```
+
+Do **not** pin `AppCheckCore` below `11.3.0` — that conflicts with Firebase App Check. Use modular headers instead (below).
 
 ### Why not `NitroGoogleSignin.podspec`?
 
 CocoaPods **does not** let a podspec enable `:modular_headers => true` on dependencies — that option exists only in the app **Podfile** (or via a config plugin that edits it).
 
-We also cannot add `AppCheckCore` as a direct `s.dependency` in the podspec: `NitroGoogleSignin` is a **Swift** pod, and CocoaPods then reports that `AppCheckCore` does not define modules (same class of error). Capping `GoogleSignIn` in the podspec helps but is not enough on a fresh `pod install` — `GoogleSignIn` 9.1.x can still resolve `AppCheckCore` 11.3.0.
+We also cannot add `AppCheckCore` as a direct `s.dependency` in the podspec: `NitroGoogleSignin` is a **Swift** pod, and CocoaPods then reports that `AppCheckCore` does not define modules (same class of error).
 
 So the library handles this in two places:
 
@@ -64,7 +74,7 @@ So the library handles this in two places:
 
 ### Expo (dev client)
 
-The config plugin patches `ios/Podfile` during prebuild. Ensure the plugin is listed in `app.config.js`, upgrade `react-native-nitro-google-signin`, then regenerate native projects:
+The config plugin patches `ios/Podfile` during prebuild (modular headers for `AppCheckCore`, `GoogleUtilities`, and `RecaptchaInterop` — **no** AppCheckCore version pin). Ensure the plugin is listed in `app.config.js`, upgrade `react-native-nitro-google-signin`, then regenerate native projects:
 
 ```bash
 npx expo prebuild --clean
@@ -77,8 +87,8 @@ No manual Podfile edits are needed for Expo.
 Add the following **inside your app `target` block** in `ios/Podfile`, **before** `use_native_modules!`:
 
 ```ruby
-# react-native-nitro-google-signin: AppCheckCore 11.3.0 + static CocoaPods needs modular headers.
-pod 'AppCheckCore', '< 11.3.0', :modular_headers => true
+# react-native-nitro-google-signin: AppCheckCore ≥ 11.3 + static CocoaPods needs modular headers.
+pod 'AppCheckCore', :modular_headers => true
 pod 'GoogleUtilities', :modular_headers => true
 pod 'RecaptchaInterop', :modular_headers => true
 ```
