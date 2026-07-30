@@ -236,6 +236,14 @@ On Android, `clearCachedAccessToken()` removes the token from `AuthorizationClie
 
 See [Usage — Access tokens](/docs/guide/usage#access-tokens-gettokens).
 
+## Android: GoogleSignInButton is laid out but invisible
+
+On some Android 15+/Play services combinations the old GMS `SignInButton` Dynamite remote view could measure at the correct size and still paint nothing.
+
+This library draws the Android button **in-process** with Play services branding assets. Upgrade `react-native-nitro-google-signin` and **rebuild** the native app (Metro reload is not enough).
+
+If the button collapses to 0×0 under the New Architecture without an explicit `style`, ensure you are on a release that applies intrinsic size from the `size` prop (or set `style` yourself using `GOOGLE_SIGN_IN_BUTTON_HEIGHT` / `GOOGLE_SIGN_IN_BUTTON_WIDTH`).
+
 ## Still stuck?
 
 Open an issue with platform, RN version, Expo vs bare, and whether you use `autoDetect` or an explicit `webClientId`:
