@@ -15,6 +15,8 @@ Complete TypeScript surface exported from `react-native-nitro-google-signin`. Fo
 | `GoogleSignInButtonHost` | component | Low-level Nitro host (same tree as `GoogleSignInButton`) |
 | `useGoogleSignInFromButton` | hook | Sign-in cascade for custom UI |
 | `GOOGLE_SIGN_IN_BUTTON_HEIGHT` | const | `48` — recommended button height (pt/dp) |
+| `GOOGLE_SIGN_IN_BUTTON_WIDTH` | const | `{ standard: 230, wide: 312, icon: 48 }` intrinsic widths (dp) |
+| `getGoogleSignInButtonIntrinsicStyle` | function | Default `{ width, height }` for a given `size` |
 | `OneTapResponseTypes` | const | String literals for `OneTapResponseType` |
 | `statusCodes` | const | Error code string constants |
 | `GoogleSignInError` | class | Thrown native/JS errors with `code` |
@@ -485,7 +487,7 @@ try {
 
 ## `GoogleSignInButton`
 
-Native `GIDSignInButton` (iOS) / `SignInButton` (Android) as a Nitro **HybridView**. See [Google Sign-In button](/docs/guide/google-sign-in-button).
+Native branded sign-in button as a Nitro **HybridView** (`GIDSignInButton` on iOS; in-process Play services branding assets on Android). See [Google Sign-In button](/docs/guide/google-sign-in-button).
 
 ### `GoogleSignInButtonProps`
 

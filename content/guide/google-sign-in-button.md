@@ -4,7 +4,10 @@ sidebar_position: 3
 
 # Google Sign-In button
 
-Native branded button (`GIDSignInButton` on iOS, `SignInButton` on Android) exposed as a Nitro HybridView.
+Native branded button exposed as a Nitro HybridView:
+
+- **iOS:** `GIDSignInButton`
+- **Android:** in-process button using Play services branding assets (localized strings + official drawables). Does **not** embed the Dynamite-backed `com.google.android.gms.common.SignInButton`, which can lay out correctly but paint blank on some Android / Play services versions.
 
 Full prop and type listings: **[API reference — GoogleSignInButton](/docs/guide/api-reference#googlesigninbutton)**.
 
@@ -17,12 +20,21 @@ import {
 } from 'react-native-nitro-google-signin'
 
 <GoogleSignInButton
-  style={{ width: 240, height: GOOGLE_SIGN_IN_BUTTON_HEIGHT }}
   colorScheme="light"
   size="standard"
   signInBehavior="credentialManager"
   onSignInSuccess={(data) => console.log(data.user.email, data.idToken)}
   onSignInError={(e) => console.error(e)}
+/>
+```
+
+The component applies an intrinsic width/height from `size` (230×48 / 312×48 / 48×48). Override with `style` when needed (for example stretch to full width):
+
+```tsx
+<GoogleSignInButton
+  size="wide"
+  style={{ width: '100%', height: GOOGLE_SIGN_IN_BUTTON_HEIGHT }}
+  ...
 />
 ```
 
@@ -65,7 +77,11 @@ See [API reference — useGoogleSignInFromButton](/docs/guide/api-reference#useg
 
 ## Constants
 
-**`GOOGLE_SIGN_IN_BUTTON_HEIGHT`** = `48` (pt/dp per Google branding). Use for `style.height`.
+**`GOOGLE_SIGN_IN_BUTTON_HEIGHT`** = `48` (pt/dp per Google branding).
+
+**`GOOGLE_SIGN_IN_BUTTON_WIDTH`** — `{ standard: 230, wide: 312, icon: 48 }` (dp). Applied as the default `style` unless you override it.
+
+**`getGoogleSignInButtonIntrinsicStyle(size)`** — returns `{ width, height }` for the given `size`.
 
 ## Low-level export
 
