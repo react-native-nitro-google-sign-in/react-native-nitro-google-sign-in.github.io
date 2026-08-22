@@ -24,10 +24,10 @@ jobs:
       - name: Checkout docs site
         uses: actions/checkout@v4
 
-      - name: Checkout package repo (demo videos)
+      - name: Checkout package repo (demo videos + compatibility)
         uses: actions/checkout@v4
         with:
-          repository: react-native-nitro-google-signin/google-signin
+          repository: react-native-nitro-google-sign-in/google-signin
           path: package
           sparse-checkout: |
             assets
@@ -36,7 +36,11 @@ jobs:
 
       - name: Sync package assets
         run: |
+          set -euo pipefail
           mkdir -p static/video
+          test -f package/compatibility.json
+          test -f package/assets/google-signin-android.webm
+          test -f package/assets/google-signin-iOS.mov
           cp package/assets/google-signin-android.webm static/video/
           cp package/assets/google-signin-iOS.mov static/video/google-signin-ios.mov
           cp package/compatibility.json compatibility.json
@@ -55,6 +59,7 @@ jobs:
       - name: Build site
         env:
           DOCUSAURUS_BASE_URL: /
+          PACKAGE_REPO_ROOT: ${{ github.workspace }}/package
         run: bun run build
 
       - name: Upload artifact
