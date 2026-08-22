@@ -38,12 +38,29 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p static/video
-          test -f package/compatibility.json
-          test -f package/assets/google-signin-android.webm
-          test -f package/assets/google-signin-iOS.mov
-          cp package/assets/google-signin-android.webm static/video/
-          cp package/assets/google-signin-iOS.mov static/video/google-signin-ios.mov
-          cp package/compatibility.json compatibility.json
+
+          # Prefer package repo copy when present on default branch; else use committed file.
+          if [[ -f package/compatibility.json ]]; then
+            cp package/compatibility.json compatibility.json
+            echo "Synced compatibility.json from package repo"
+          elif [[ -f compatibility.json ]]; then
+            echo "Using committed compatibility.json (not on package default branch yet)"
+          else
+            echo "::error::compatibility.json missing from package checkout and docs repo"
+            exit 1
+          fi
+
+          if [[ -f package/assets/google-signin-android.webm ]]; then
+            cp package/assets/google-signin-android.webm static/video/
+          else
+            echo "::warning::package/assets/google-signin-android.webm missing"
+          fi
+
+          if [[ -f package/assets/google-signin-iOS.mov ]]; then
+            cp package/assets/google-signin-iOS.mov static/video/google-signin-ios.mov
+          else
+            echo "::warning::package/assets/google-signin-iOS.mov missing"
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

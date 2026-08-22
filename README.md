@@ -8,7 +8,8 @@ Docusaurus docs for **react-native-nitro-google-signin**, managed with **Bun**.
 | `content/` | Markdown documentation pages |
 | `static/` | Images, favicon, videos (served as `/img/...`, `/video/...`) |
 | `scripts/sync-media.mjs` | Copies demo videos from the package repo `assets/` before build |
-| `scripts/sync-compatibility.mjs` | Copies `compatibility.json` from the package repo before build |
+| `scripts/sync-compatibility.mjs` | Refreshes committed `compatibility.json` from the package repo before build |
+| `compatibility.json` | Version matrix used by the Compatibility page (committed; CI can refresh from package) |
 | `src/` | Homepage and theme |
 
 ## Commands
