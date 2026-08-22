@@ -10,6 +10,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'getting-started/requirements',
         'getting-started/installation',
+        'getting-started/compatibility',
         'getting-started/quick-start',
       ],
     },

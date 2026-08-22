@@ -21,6 +21,15 @@ const config: Config = {
   title: 'React Native Nitro Google Sign-In',
   tagline: 'Nitro-powered Universal Google Sign-In for React Native',
   favicon: 'img/favicon.svg',
+  headTags: [
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'theme-color',
+        content: '#18181b',
+      },
+    },
+  ],
   url: 'https://react-native-nitro-google-sign-in.github.io',
   baseUrl,
   organizationName,
@@ -49,6 +58,7 @@ const config: Config = {
     image: 'img/social-card.svg',
     navbar: {
       title: 'Nitro Google Sign-In',
+      hideOnScroll: true,
       logo: {
         alt: 'Nitro Google Sign-In',
         src: 'img/logo.svg',
@@ -154,6 +164,13 @@ const config: Config = {
     colorMode: {
       defaultMode: 'light',
       respectPrefersColorScheme: true,
+      disableSwitch: false,
+    },
+    docs: {
+      sidebar: {
+        hideable: false,
+        autoCollapseCategories: false,
+      },
     },
   } satisfies Preset.ThemeConfig,
 }

@@ -47,6 +47,8 @@ Run `bundle install` once first if your app has a `Gemfile` (included in the def
 
 Rebuild your app (Metro alone is not enough for native modules).
 
+See [Compatibility](/docs/getting-started/compatibility) for supported React Native and `react-native-nitro-modules` versions.
+
 ## Expo
 
 Use a [development build](https://docs.expo.dev/develop/development-builds/introduction/) — this library does **not** run in Expo Go.

@@ -11,3 +11,4 @@ build/
 *.log
 .env
 .env.*
+compatibility.json

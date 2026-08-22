@@ -9,7 +9,7 @@ sidebar_position: 1
 | Requirement | Version | |
 | ----------- | ------- | --- |
 | React Native | **≥ 0.76** | **Required** |
-| [react-native-nitro-modules](https://nitro.margelo.com) | Latest compatible with your RN version | **Required** |
+| [react-native-nitro-modules](https://nitro.margelo.com) | **≥ 0.36** (**0.37.x** recommended with 2.0.x) | **Required** |
 | Node.js (for tooling) | **≥ 20** | **Required** |
 | Expo | **≥ 49** — dev client only | **Optional** (not Expo Go) |
 
@@ -38,7 +38,7 @@ sidebar_position: 1
 | `androidx.credentials` in your app `build.gradle` | **Optional** (omit) | Bundled by the library; see [Credential Manager & GMS](/docs/setup/android#credential-manager-and-gms) |
 | Google Play on device/emulator | **Required** (Android) | Sign in with Google via Credential Manager needs Play services |
 
-Full walkthrough: **[Google Cloud & config files](/docs/setup/google-cloud)** · **[Android — Credential Manager](/docs/setup/android#credential-manager-and-gms)**.
+Full walkthrough: **[Google Cloud & config files](/docs/setup/google-cloud)** · **[Android — Credential Manager](/docs/setup/android#credential-manager-and-gms)** · **[Compatibility](/docs/getting-started/compatibility)**.
 
 ```ts
 // Required resources for autoDetect:

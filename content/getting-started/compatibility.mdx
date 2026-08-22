@@ -1,0 +1,49 @@
+---
+sidebar_position: 3
+---
+
+import {
+  NitroGoogleSignInCompatibility,
+  NitroModulesCompatibility,
+} from '@site/src/components/Compatibility'
+
+# Compatibility
+
+:::info
+`react-native-nitro-google-signin` depends on [react-native-nitro-modules](https://nitro.margelo.com). Install versions that match your React Native release.
+:::
+
+**The tables assume you're using the latest patch of each library minor version.**  
+For example, `2.0.x` lists React Native `0.87` because a later `2.0.x` patch added it, even if an earlier patch did not. If you're on an older patch, check the [`compatibility.json`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/compatibility.json) file in the package for exact version support.
+
+### Supported React Native versions
+
+<NitroGoogleSignInCompatibility />
+
+### Supported react-native-nitro-modules versions
+
+`react-native-nitro-modules` is a required peer dependency. Install a version from the same row as your `react-native-nitro-google-signin` release.
+
+<NitroModulesCompatibility />
+
+## Install matching versions
+
+For the current `2.0.x` line:
+
+```bash
+bun add react-native-nitro-google-signin react-native-nitro-modules@^0.37.0
+```
+
+## Validate your app versions
+
+From your app root, after installing dependencies:
+
+```bash
+node node_modules/react-native-nitro-google-signin/scripts/validate-compatibility.js
+```
+
+The script reads `react-native` and `react-native-nitro-modules` from your app's `node_modules` and exits with an error when the combination is outside the supported matrix above.
+
+## Related requirements
+
+Platform tooling, Google Cloud setup, and Expo constraints are listed on the [Requirements](/docs/getting-started/requirements) page.

@@ -31,13 +31,15 @@ jobs:
           path: package
           sparse-checkout: |
             assets
+            compatibility.json
           sparse-checkout-cone-mode: false
 
-      - name: Sync demo videos
+      - name: Sync package assets
         run: |
           mkdir -p static/video
           cp package/assets/google-signin-android.webm static/video/
           cp package/assets/google-signin-iOS.mov static/video/google-signin-ios.mov
+          cp package/compatibility.json compatibility.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
