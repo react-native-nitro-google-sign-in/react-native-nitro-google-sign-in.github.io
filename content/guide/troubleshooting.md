@@ -121,11 +121,11 @@ See [Android — Credential Manager checklist](/docs/setup/android#credential-ma
 
 ## `type: 'cancelled'` after picking a Google account (Android production) {#cancelled-after-account-pick}
 
-Credential Manager often reports OAuth misconfiguration as **user cancellation**, not `DEVELOPER_ERROR`.
+Credential Manager or Google Play Services often reports OAuth misconfiguration as **user cancellation** (`RESULT_CANCELED`). The library inspects cancellation payloads and provider error messages for status code `10`, SHA-1, or developer error details to throw `DEVELOPER_ERROR`. However, if Google closes the dialog without diagnostic details, it surfaces as `type: 'cancelled'`.
 
-**Symptom:** Account picker / Sign in with Google UI appears → user selects an account → JS receives `type: 'cancelled'` (not a thrown error). Works in **debug**, fails on **release / Play Store** builds.
+**Symptom:** Account picker / Sign in with Google UI appears → user selects an account → JS receives `DEVELOPER_ERROR` (or `type: 'cancelled'` if Google provides no payload). Works in **debug**, fails on **release / Play Store** builds.
 
-**Cause:** Google validates the app’s signing certificate against the **Android** OAuth client. Debug builds use the debug keystore SHA-1; Play builds use the **Play App Signing** certificate (different from your upload keystore). If that SHA-1 is missing, Play services closes the flow with `RESULT_CANCELED`, which this library maps to `type: 'cancelled'`.
+**Cause:** Google validates the app’s signing certificate against the **Android** OAuth client. Debug builds use the debug keystore SHA-1; Play builds use the **Play App Signing** certificate (different from your upload keystore). If that SHA-1 is missing, Play services closes the flow with `RESULT_CANCELED`.
 
 **Fix:**
 
