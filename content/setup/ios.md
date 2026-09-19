@@ -16,7 +16,7 @@ OAuth, plist/json downloads, and file paths: [Google Cloud & config files](/docs
 | URL scheme (`REVERSED_CLIENT_ID`) | **Required** | OAuth redirect must open your app |
 | `GoogleService-Info.plist` | **Required for `autoDetect`** | Supplies `WEB_CLIENT_ID` to native code |
 | `bundle exec pod install --project-directory="ios"` | **Required** | Links GoogleSignIn CocoaPod (from app root) |
-| AppDelegate `GIDSignIn.sharedInstance.handle(url)` | **Optional** (Expo) · **Recommended** (bare RN) · **Required** (multiple URL handlers or stuck redirect) | Forwards OAuth URL to `GIDSignIn`; not only for multiple handlers — see [AppDelegate](#appdelegate-handle-oauth-redirect-urls) |
+| AppDelegate / SceneDelegate `GIDSignIn.sharedInstance.handle(url)` | **Optional** (Expo) · **Recommended** (bare RN) · **Required** (scenes, multiple URL handlers, or stuck redirect) | Forwards OAuth URL to `GIDSignIn`; required in `SceneDelegate` when adopting UIKit scene lifecycle — see [AppDelegate / SceneDelegate](#appdelegate-handle-oauth-redirect-urls) |
 | `iosClientId` in `configure()` | **Optional** | Usually inferred from plist |
 
 ---
@@ -106,30 +106,77 @@ URL schemes must be registered statically with the iOS operating system via the 
 
 ---
 
-## AppDelegate: handle OAuth redirect URLs {#appdelegate-handle-oauth-redirect-urls}
+## AppDelegate / SceneDelegate: handle OAuth redirect URLs {#appdelegate-handle-oauth-redirect-urls}
 
 After Google Sign-In opens Safari or an in-app browser, iOS returns to your app via the reversed client ID URL scheme. The native SDK must receive that URL through `GIDSignIn.sharedInstance.handle(url)`.
 
-Reference: [iOS setup — AppDelegate URL handling](/docs/setup/ios#appdelegate-handle-oauth-redirect-urls) (optional on Expo when Google is the sole URL handler; recommended on bare RN).
+Reference: [iOS setup — URL handling](/docs/setup/ios#appdelegate-handle-oauth-redirect-urls).
 
 | Situation | | Why |
 | --------- | --- | --- |
+| **Apps adopting UIKit Scene Lifecycle (`UISceneDelegate`)** | **Required in `SceneDelegate`** | iOS **stops calling** `application(_:open:options:)` once scenes are adopted; redirects must be handled in `scene(_:openURLContexts:)` |
 | **Expo** — only Google Sign-In, URL scheme from plugin | **Optional** | Prebuild often registers the scheme; many apps work without editing `AppDelegate` |
-| **Expo** — Facebook, deep linking, or other `openURL` handlers | **Required** | Chain handlers in generated `AppDelegate` |
+| **Expo** — Scene Lifecycle (`enableSceneSupport` / SDK 57+) or multiple URL handlers | **Required** | Handle in `SceneDelegate` when scenes are adopted ([Expo scene setup](/docs/setup/expo#expo-scene-lifecycle)) or chain handlers in `AppDelegate` |
 | **Bare RN** — interactive sign-in (Safari / account UI) | **Recommended** | RN 0.77+ templates often ship **without** `application(_:open:options:)` — redirects never reach `GIDSignIn` |
 | **Bare RN** — multiple `openURL` handlers | **Required** | iOS calls one handler; you must chain with `\|\|` |
 | Sign-in **stuck** after browser on any stack | **Required** | Missing `handle(url)` is a common cause |
 
 :::tip Not only for “multiple URL handlers”
-Some guides label this step optional when Google is your **only** URL handler. That assumes your app already implements `openURL`. **Bare React Native 0.77+ often does not** — so we **recommend** adding `handle(url)` even with a single handler. It becomes **required** when another SDK also handles URLs, or when sign-in never returns after OAuth.
+Some guides label this step optional when Google is your **only** URL handler. That assumes your app already implements `openURL`. **Bare React Native 0.77+ often does not** — so we **recommend** adding `handle(url)` even with a single handler. It becomes **required** when another SDK also handles URLs, when sign-in never returns after OAuth, or when your app uses `SceneDelegate`.
 :::
 
-Rebuild the native app after changing `AppDelegate`.
+Rebuild the native app after changing native delegates.
 
-### Swift (`AppDelegate.swift`) — React Native 0.77+ {#swift-appdelegate}
+### UIKit Scene-Based Life Cycle (`SceneDelegate.swift`) {#scenedelegate}
+
+:::important Required if your app adopts UISceneDelegate
+When your app adopts Apple's [UIKit scene-based life cycle](https://developer.apple.com/documentation/uikit/transitioning-to-the-uikit-scene-based-life-cycle) (`UIApplicationSceneManifest`), UIKit **stops calling** `application(_:open:options:)` in `AppDelegate`. You **must** pass incoming URLs to Google Sign-In in `SceneDelegate`. For Expo apps using `expo-build-properties` (`enableSceneSupport`), see [Expo UIKit Scene Lifecycle](/docs/setup/expo#expo-scene-lifecycle).
+:::
+
+```swift
+import GoogleSignIn
+import UIKit
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+  var window: UIWindow?
+
+  // Handle URL redirect while app is running / foregrounded
+  func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+    if let url = URLContexts.first?.url {
+      _ = GIDSignIn.sharedInstance.handle(url)
+    }
+  }
+
+  // Handle cold launch via URL redirect
+  func scene(
+    _ scene: UIScene,
+    willConnectTo session: UISceneSession,
+    options connectionOptions: UIScene.ConnectionOptions
+  ) {
+    if let url = connectionOptions.urlContexts.first?.url {
+      _ = GIDSignIn.sharedInstance.handle(url)
+    }
+  }
+}
+```
+
+#### Objective-C (`SceneDelegate.m`)
+
+```objc
+#import <GoogleSignIn/GoogleSignIn.h>
+
+- (void)scene:(UIScene *)scene openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts {
+  NSURL *url = URLContexts.anyObject.URL;
+  if (url != nil) {
+    [GIDSignIn.sharedInstance handleURL:url];
+  }
+}
+```
+
+### Swift (`AppDelegate.swift`) — Apps without SceneDelegate {#swift-appdelegate}
 
 :::tip Optional on Expo · Recommended on bare RN
-Add the method below when you use **bare RN**, when sign-in **stalls** after the browser, or when you **share** `openURL` with Facebook, React Navigation linking, etc. Skip on Expo if the config plugin URL scheme alone works for you.
+Add the method below when you use **bare RN** without `SceneDelegate`, when sign-in **stalls** after the browser, or when you **share** `openURL` with Facebook, React Navigation linking, etc. Skip on Expo if the config plugin URL scheme alone works for you.
 :::
 
 ```swift
@@ -158,7 +205,7 @@ See [`example/ios/NitroGoogleSigninExample/AppDelegate.swift`](https://github.co
 Objective-C projects import `#import <GoogleSignIn/GoogleSignIn.h>` in the bridging header. Swift apps can `import GoogleSignIn` directly when the CocoaPod is installed.
 :::
 
-### Objective-C (`AppDelegate.mm`)
+### Objective-C (`AppDelegate.mm`) — Apps without SceneDelegate
 
 ```objc
 #import <GoogleSignIn/GoogleSignIn.h>
@@ -184,7 +231,7 @@ From your **app project root** (not inside `ios/`):
 bundle exec pod install --project-directory="ios"
 ```
 
-Run `bundle install` once if your project has a `Gemfile`. The pod pulls **GoogleSignIn** (~> 9.x) transitively.
+Run `bundle install` once if your project has a `Gemfile`. The pod pulls **GoogleSignIn** (~> 10.x) transitively.
 
 ---
 

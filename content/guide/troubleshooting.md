@@ -26,7 +26,7 @@ Or pass an explicit Web client ID instead of `'autoDetect'`.
 Interactive sign-in opens a browser or account sheet, then should return to your app. If it hangs:
 
 1. Confirm **URL scheme** = `REVERSED_CLIENT_ID` from plist ([iOS setup](/docs/setup/ios#url-scheme-required)).
-2. On **bare React Native**, add `GIDSignIn.sharedInstance.handle(url)` in `AppDelegate` ([details](/docs/setup/ios#appdelegate-handle-oauth-redirect-urls)).
+2. On **apps using UIKit Scene Lifecycle (Expo or bare RN)**, add `GIDSignIn.sharedInstance.handle(url)` in `SceneDelegate.swift` ([Expo scene setup](/docs/setup/expo#expo-scene-lifecycle) · [bare RN scene setup](/docs/setup/ios#scenedelegate)). On apps without scenes, add it in `AppDelegate.swift`.
 3. If you use **Facebook or other `openURL` handlers**, chain them with `||` before/after Google's handler.
 
 ## iOS URL scheme / redirect errors (App crash on button tap)
@@ -243,6 +243,85 @@ On some Android 15+/Play services combinations the old GMS `SignInButton` Dynami
 This library draws the Android button **in-process** with Play services branding assets. Upgrade `react-native-nitro-google-signin` and **rebuild** the native app (Metro reload is not enough).
 
 If the button collapses to 0×0 under the New Architecture without an explicit `style`, ensure you are on a release that applies intrinsic size from the `size` prop (or set `style` yourself using `GOOGLE_SIGN_IN_BUTTON_HEIGHT` / `GOOGLE_SIGN_IN_BUTTON_WIDTH`).
+
+## iOS deployment target set to 9.0 error (Xcode 16+)
+
+When building for the iOS Simulator with Xcode 16+, you may encounter this build integrity error:
+
+```text
+The iOS Simulator deployment target 'IPHONEOS_DEPLOYMENT_TARGET' is set to 9.0, but the range of supported deployment target versions is 15.0 to ... (in target 'PromisesSwift-Promises_Privacy' from project 'Pods')
+```
+
+### Why this happens
+Transitive dependencies pulled by GoogleSignIn (such as `PromisesObjC` or `PromisesSwift`) have legacy podspecs where `IPHONEOS_DEPLOYMENT_TARGET` was declared as `9.0`. Xcode 16+ enforces a minimum deployment target of 15.0+ and fails the build.
+
+### Fix
+In your **`ios/Podfile`**, ensure your `post_install` hook bumps any targets below `15.1`:
+
+```ruby
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false,
+    )
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 15.1
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
+        end
+      end
+    end
+  end
+```
+
+Then re-run `bundle exec pod install --project-directory="ios"` and rebuild in Xcode.
+
+## Crash on launch: `UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption` (iOS 27 / Xcode 27)
+
+When compiling against the **iOS 27 SDK** (via **Xcode 27**), Apple mandates adoption of the UIKit scene-based lifecycle. Applications without a declared `UIApplicationSceneManifest` crash immediately on launch before any JavaScript code runs, with the error:
+
+```text
+UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption
+```
+
+### Expo fix (SDK 57)
+1. Install `expo-build-properties`:
+   ```bash
+   npx expo install expo-build-properties
+   ```
+2. Add `enableSceneSupport: true` to `app.json` or `app.config.js`:
+   ```json
+   {
+     "expo": {
+       "plugins": [
+         "expo-dev-client",
+         "react-native-nitro-google-signin",
+         [
+           "expo-build-properties",
+           {
+             "ios": {
+               "enableSceneSupport": true
+             }
+           }
+         ]
+       ]
+     }
+   }
+   ```
+3. Re-run prebuild and rebuild the native app:
+   ```bash
+   npx expo prebuild --clean
+   npx expo run:ios
+   ```
+
+*(Note: Expo SDK 58 and newer enable UIKit scene lifecycle support by default.)*
+
+### Bare React Native fix
+Declare `UIApplicationSceneManifest` in `Info.plist` and implement `SceneDelegate.swift` — see [iOS setup — UIKit Scene-Based Life Cycle](/docs/setup/ios#scenedelegate).
+
+### OAuth redirect routing with scenes
+When scene lifecycle is active, iOS routes OAuth redirects to `SceneDelegate` (`scene(_:openURLContexts:)` / `scene(_:willConnectTo:options:)`) instead of `AppDelegate` (`application(_:open:options:)`). If sign-in hangs after returning from Safari, ensure `GIDSignIn.sharedInstance.handle(url)` is implemented in `SceneDelegate.swift` ([Expo details](/docs/setup/expo#expo-scene-lifecycle) · [Bare RN details](/docs/setup/ios#scenedelegate)).
 
 ## Still stuck?
 

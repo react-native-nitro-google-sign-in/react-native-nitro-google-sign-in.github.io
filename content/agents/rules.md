@@ -31,7 +31,8 @@ Copy these bullets into whichever file your tool supports:
 - Android `webClientId: 'autoDetect'`: `google-services.json` + Google Services Gradle plugin + SHA-1.
 - Android explicit `webClientId`: SHA-1 still required; JSON/Gradle optional.
 - iOS: `REVERSED_CLIENT_ID` URL scheme required; `GoogleService-Info.plist` for `autoDetect`.
-- iOS bare RN: recommend `GIDSignIn.sharedInstance.handle(url)` in AppDelegate when interactive sign-in stalls.
+- iOS scene lifecycle: for UIKit scenes (`UISceneDelegate` or Expo `enableSceneSupport`), handle OAuth redirects in `SceneDelegate.swift`; for bare RN without scenes, recommend `GIDSignIn.sharedInstance.handle(url)` in `AppDelegate.swift`.
+- Expo SDK 57 on iOS 27 / Xcode 27: configure `expo-build-properties` with `ios: { enableSceneSupport: true }` to resolve `UIApplicationEvaluateRuntimeIssueForNoSceneLifecycleAdoption` crash on launch.
 - After native dependency or config plugin changes: rebuild the app (Metro reload is not enough).
 - iOS pods: `bundle exec pod install --project-directory="ios"` from app root.
 ```
@@ -54,7 +55,7 @@ Add or extend **`AGENTS.md`** at your app root:
 - Use skill `react-native-nitro-google-signin` for setup and API.
 - Expo: dev client only; not Expo Go.
 - Android autoDetect: google-services.json + Google Services plugin.
-- iOS: REVERSED_CLIENT_ID URL scheme; AppDelegate `handle(url)` on bare RN when needed.
+- iOS: REVERSED_CLIENT_ID URL scheme; SceneDelegate / AppDelegate `handle(url)` when needed (SceneDelegate required if scene lifecycle is enabled).
 ```
 
 This library’s own repo uses [`AGENTS.md`](https://github.com/react-native-nitro-google-sign-in/google-signin/blob/main/AGENTS.md) for contributors.
