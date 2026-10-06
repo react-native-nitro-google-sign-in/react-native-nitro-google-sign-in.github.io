@@ -236,6 +236,24 @@ On Android, `clearCachedAccessToken()` removes the token from `AuthorizationClie
 
 See [Usage — Access tokens](/docs/guide/usage#access-tokens-gettokens).
 
+## Android: `No Activity available` from `getTokens()` / `clearCachedAccessToken()`
+
+`getTokens()` and `clearCachedAccessToken()` do **not** require a foreground Activity when the scopes are already granted. You can call them from a background task (`expo-background-task` / WorkManager, headless JS).
+
+If you still see:
+
+```text
+GoogleSignInException: No Activity available. Retry when the app is in the foreground.
+```
+
+or `IN_PROGRESS` with a message about authorization requiring user consent:
+
+1. **Upgrade** `react-native-nitro-google-signin` to a release that includes Android background token support, then **rebuild** the native app.
+2. Ensure the user signed in and granted the needed scopes **in the foreground** at least once (`signIn` / `requestScopes`).
+3. If Google needs a **new** consent UI (new scopes or revoked grant), retry when the app is in the foreground — there is no Activity to show the consent sheet from a headless process.
+
+`requestScopes()` and the sign-in flows still require an Activity.
+
 ## Android: GoogleSignInButton is laid out but invisible
 
 On some Android 15+/Play services combinations the old GMS `SignInButton` Dynamite remote view could measure at the correct size and still paint nothing.

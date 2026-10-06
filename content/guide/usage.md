@@ -216,11 +216,15 @@ const signInAndFetchTokens = async () => {
 
 | Platform | Behavior |
 | -------- | -------- |
-| **Android** | Returns the ID token cached from the last Credential Manager sign-in plus a fresh access token from `AuthorizationClient`. May show a consent UI if scopes were not yet authorized. |
+| **Android** | Returns the ID token cached from the last Credential Manager sign-in plus a fresh access token from `AuthorizationClient`. Works **without a foreground Activity** (for example in `expo-background-task` / WorkManager / headless JS) while the scopes are already granted. If Google asks for consent and no Activity is available, throws `IN_PROGRESS`. With an Activity, may show a consent UI if scopes were not yet authorized. |
 | **iOS** | Uses the AppAuth session behind `GIDSignIn`. Refreshes tokens from Google when expired or after `clearCachedAccessToken()`. |
 
 :::tip Backend auth
 Google recommends verifying the **`idToken`** on your server or exchanging a **`serverAuthCode`** (with `offlineAccess: true`) for refresh tokens. Client-side access tokens are mainly for calling Google APIs from the device.
+:::
+
+:::info Android background tasks
+On Android, grant scopes once in the foreground (`signIn` / `requestScopes`). Later, `getTokens()` and `clearCachedAccessToken()` can refresh an access token from a background task without an Activity — as long as Google does not need a new consent UI. Sign-in and `requestScopes()` still require a foreground Activity.
 :::
 
 ### Invalid access token (`clearCachedAccessToken`)
@@ -241,7 +245,7 @@ try {
 
 | Platform | `clearCachedAccessToken` | Next `getTokens()` |
 | -------- | ------------------------ | ------------------- |
-| **Android** | Removes the token from `AuthorizationClient`'s local cache | Fetches a new access token from Google |
+| **Android** | Removes the token from `AuthorizationClient`'s local cache (no Activity required) | Fetches a new access token from Google |
 | **iOS** | Marks the AppAuth session with `setNeedsTokenRefresh()` | Performs a network refresh and returns new tokens |
 
 On **iOS**, calling `getTokens()` twice in a row **without** clearing first may return the same access token while it is still valid — that is expected. Call `clearCachedAccessToken()` first when you know the token is invalid.

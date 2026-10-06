@@ -187,10 +187,10 @@ Returns the current user's ID and OAuth access tokens after sign-in. Useful when
 
 | Platform | Native behavior |
 | -------- | ----------------- |
-| **Android** | Combines the cached ID token from the last Credential Manager sign-in with a fresh access token from `AuthorizationClient.authorize()`. May show a consent UI if scopes were not yet authorized. |
+| **Android** | Combines the cached ID token from the last Credential Manager sign-in with a fresh access token from `AuthorizationClient.authorize()`. Works **without a foreground Activity** (for example in a background task / headless JS) while the scopes are already granted. If Google asks for consent and no Activity is available, throws `IN_PROGRESS`. With an Activity, may show a consent UI if scopes were not yet authorized. |
 | **iOS** | Reads tokens from the AppAuth session via `performAction(freshTokens:)`. Refreshes from Google when tokens are expired or after `clearCachedAccessToken()`. |
 
-**Throws:** `GoogleSignInError` with `SIGN_IN_REQUIRED` when no user is signed in.
+**Throws:** `GoogleSignInError` with `SIGN_IN_REQUIRED` when no user is signed in. On Android, also `IN_PROGRESS` when consent is required but no Activity is available.
 
 Prefer verifying `idToken` or exchanging `serverAuthCode` on your backend over sending raw access tokens from the client.
 
@@ -208,7 +208,7 @@ Prefer verifying `idToken` or exchanging `serverAuthCode` on your backend over s
 
 | Platform | Behavior |
 | -------- | -------- |
-| **Android** | Calls `AuthorizationClient.clearToken()` — use when Google indicates the access token is invalid before retrying authorization. |
+| **Android** | Calls `AuthorizationClient.clearToken()` via the application context — **no Activity required** (safe from background tasks). Use when Google indicates the access token is invalid before retrying authorization. |
 | **iOS** | Calls `OIDAuthState.setNeedsTokenRefresh()` on the user's AppAuth session. The **next** `getTokens()` performs a network refresh. Validates that `accessTokenString` matches the current access token when non-empty. |
 
 ---
@@ -466,7 +466,7 @@ type StatusCode = (typeof statusCodes)[keyof typeof statusCodes]
 | ---- | ---- |
 | `ONE_TAP_START_FAILED` | Credential Manager / Google Sign-In request failed (not user cancel). |
 | `PLAY_SERVICES_NOT_AVAILABLE` | **Android** — Play Services missing or outdated (`checkPlayServices` or sign-in). |
-| `IN_PROGRESS` | No `Activity` / view controller, or sign-in called before `configure()`. |
+| `IN_PROGRESS` | No `Activity` / view controller when UI is required (sign-in, `requestScopes`, or Android `getTokens()` when Google asks for consent), or sign-in called before `configure()`. Android `getTokens()` / `clearCachedAccessToken()` do **not** need an Activity when scopes are already granted. |
 | `SIGN_IN_REQUIRED` | User must sign in first (`getTokens()` when no active session). |
 | `SIGN_IN_CANCELLED` | Reserved / parity — prefer `isCancelledResponse()` on responses. Also thrown from Android authorization UI cancel. |
 | `DEVELOPER_ERROR` | **Android** — OAuth misconfiguration surfaced by Credential Manager / AuthorizationClient (wrong SHA-1, package, or client ID). Note: many SHA-1 issues still appear as `type: 'cancelled'` — see [troubleshooting](/docs/guide/troubleshooting#cancelled-after-account-pick). |
@@ -640,8 +640,8 @@ Does **not** call `presentExplicitSignIn` unless `behavior === 'buttonFlow'`. Do
 | `signIn` | Credential Manager (authorized accounts); may attach `serverAuthCode` when `offlineAccess: true` | Current user or restore; **silent path: `serverAuthCode: null`** |
 | `createAccount` | All accounts (CredMan sheet) | Interactive sign-in |
 | `presentExplicitSignIn` | `GetSignInWithGoogleOption` dialog; validates JWT `hd` when `hostedDomain` set | Interactive sign-in |
-| `getTokens` | Cached ID token + `AuthorizationClient` access token | AppAuth `performAction(freshTokens:)` |
-| `clearCachedAccessToken` | Clears local access token cache | Marks session for forced refresh |
+| `getTokens` | Cached ID token + `AuthorizationClient` access token; no Activity needed when scopes already granted | AppAuth `performAction(freshTokens:)` |
+| `clearCachedAccessToken` | Clears local access token cache (no Activity needed) | Marks session for forced refresh |
 | `signOut` | Disables auto sign-in semantics | `GIDSignIn.signOut()` |
 | `revokeAccess` | Revokes by email or user id | Current session only; throws if id mismatch |
 | `hostedDomain` | CredMan filters at request; button flow validates JWT `hd` post sign-in | `GIDConfiguration.hostedDomain` |
