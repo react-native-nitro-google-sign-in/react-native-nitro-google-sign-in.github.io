@@ -157,9 +157,7 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} react-native-nitro-google-signin. MIT.`,
     },
     prism: {
-      // Code blocks use a dark chrome in both color modes (see custom.css).
-      // A light Prism theme (e.g. github) paints dark tokens that fail contrast.
-      theme: prismThemes.dracula,
+      theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
       additionalLanguages: ['bash', 'json', 'swift', 'kotlin'],
     },

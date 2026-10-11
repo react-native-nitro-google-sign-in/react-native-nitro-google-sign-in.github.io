@@ -411,14 +411,14 @@ body {
   font-size: 0.875em;
 }
 
-/* Block containers */
+/* Block containers — surfaces follow color mode */
 div[class*='codeBlockContainer'],
 .theme-code-block {
-  --ngs-code-bg: #18181b;
-  --ngs-code-toolbar: #27272a;
-  --ngs-code-border: #3f3f46;
-  --ngs-code-fg: #e4e4e7;
-  --ngs-code-muted: #a1a1aa;
+  --ngs-code-bg: var(--ngs-surface);
+  --ngs-code-toolbar: var(--ngs-chip-bg);
+  --ngs-code-border: var(--ngs-panel-border);
+  --ngs-code-fg: var(--ngs-ink);
+  --ngs-code-muted: var(--ngs-muted);
   margin: 1.25rem 0 1.5rem;
   border-radius: 0.625rem !important;
   border: 1px solid var(--ngs-code-border) !important;
@@ -432,6 +432,8 @@ div[class*='codeBlockContainer'],
   --ngs-code-bg: #0c0c0e;
   --ngs-code-toolbar: #27272a;
   --ngs-code-border: #3f3f46;
+  --ngs-code-fg: #e4e4e7;
+  --ngs-code-muted: #a1a1aa;
 }
 
 .theme-code-block pre,
@@ -488,7 +490,7 @@ div[class*='codeBlockContent'] button[class*='copyButton'] {
   background: var(--ngs-code-toolbar) !important;
   color: var(--ngs-code-fg) !important;
   border: 1px solid var(--ngs-code-border) !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow: none;
   transition:
     background 0.15s ease,
     border-color 0.15s ease,
@@ -505,9 +507,9 @@ div[class*='codeBlockContent'] div[class*='buttonGroup'] button:focus-visible,
 div[class*='codeBlockContent'] button[class*='copyButton']:hover,
 div[class*='codeBlockContent'] button[class*='copyButton']:focus-visible {
   opacity: 1 !important;
-  background: #3f3f46 !important;
-  border-color: #52525b !important;
-  color: #fafafa !important;
+  background: var(--ngs-code-border) !important;
+  border-color: var(--ngs-code-muted) !important;
+  color: var(--ngs-code-fg) !important;
 }
 
 .theme-code-block div[class*='copyButtonIcon'],
@@ -523,65 +525,65 @@ div[class*='codeBlockContent'] div[class*='copyButtonSuccessIcon'] {
   color: var(--ngs-google-green) !important;
 }
 
-/* Prism token contrast on dark blocks */
-.theme-code-block .token.comment,
-.theme-code-block .token.prolog,
-.theme-code-block .token.doctype,
-.theme-code-block .token.cdata {
+/* Prism token contrast on dark blocks only; light uses the GitHub theme */
+[data-theme='dark'] .theme-code-block .token.comment,
+[data-theme='dark'] .theme-code-block .token.prolog,
+[data-theme='dark'] .theme-code-block .token.doctype,
+[data-theme='dark'] .theme-code-block .token.cdata {
   color: #758575;
 }
 
-.theme-code-block .token.punctuation {
+[data-theme='dark'] .theme-code-block .token.punctuation {
   color: #878787;
 }
 
-.theme-code-block .token.property,
-.theme-code-block .token.tag,
-.theme-code-block .token.boolean,
-.theme-code-block .token.number,
-.theme-code-block .token.constant,
-.theme-code-block .token.symbol {
+[data-theme='dark'] .theme-code-block .token.property,
+[data-theme='dark'] .theme-code-block .token.tag,
+[data-theme='dark'] .theme-code-block .token.boolean,
+[data-theme='dark'] .theme-code-block .token.number,
+[data-theme='dark'] .theme-code-block .token.constant,
+[data-theme='dark'] .theme-code-block .token.symbol {
   color: #bd976a;
 }
 
-.theme-code-block .token.selector,
-.theme-code-block .token.attr-name,
-.theme-code-block .token.string,
-.theme-code-block .token.char,
-.theme-code-block .token.builtin {
+[data-theme='dark'] .theme-code-block .token.selector,
+[data-theme='dark'] .theme-code-block .token.attr-name,
+[data-theme='dark'] .theme-code-block .token.string,
+[data-theme='dark'] .theme-code-block .token.char,
+[data-theme='dark'] .theme-code-block .token.builtin {
   color: #c98a7d;
 }
 
-.theme-code-block .token.operator,
-.theme-code-block .token.entity,
-.theme-code-block .token.url,
-.theme-code-block .language-css .token.string,
-.theme-code-block .style .token.string,
-.theme-code-block .token.variable {
+[data-theme='dark'] .theme-code-block .token.operator,
+[data-theme='dark'] .theme-code-block .token.entity,
+[data-theme='dark'] .theme-code-block .token.url,
+[data-theme='dark'] .theme-code-block .language-css .token.string,
+[data-theme='dark'] .theme-code-block .style .token.string,
+[data-theme='dark'] .theme-code-block .token.variable {
   color: #c98a7d;
 }
 
-.theme-code-block .token.atrule,
-.theme-code-block .token.attr-value,
-.theme-code-block .token.function,
-.theme-code-block .token.class-name {
+[data-theme='dark'] .theme-code-block .token.atrule,
+[data-theme='dark'] .theme-code-block .token.attr-value,
+[data-theme='dark'] .theme-code-block .token.function,
+[data-theme='dark'] .theme-code-block .token.class-name {
   color: #80a665;
 }
 
-.theme-code-block .token.keyword {
+[data-theme='dark'] .theme-code-block .token.keyword {
   color: #cb7676;
 }
 
-.theme-code-block .token.regex,
-.theme-code-block .token.important {
+[data-theme='dark'] .theme-code-block .token.regex,
+[data-theme='dark'] .theme-code-block .token.important {
   color: #c98a7d;
 }
 
-.theme-code-block .token.deleted {
+[data-theme='dark'] .theme-code-block .token.deleted {
   color: #cb7676;
 }
 
-.theme-code-block .token.inserted {
+[data-theme='dark'] .theme-code-block .token.inserted {
   color: #80a665;
 }
 
