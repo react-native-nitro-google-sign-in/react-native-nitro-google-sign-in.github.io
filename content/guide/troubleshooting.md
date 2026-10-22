@@ -119,6 +119,13 @@ Sign-in works in **debug** but crashes or no-ops in **release** after enabling `
 
 See [Android — Credential Manager checklist](/docs/setup/android#credential-manager-and-gms).
 
+## `DEVELOPER_ERROR` on the first sign-in tap (iOS)
+
+The reversed iOS client ID is not in `CFBundleURLSchemes`, so the sign-in is rejected with `DEVELOPER_ERROR` before the Google sheet opens.
+
+- Add the `REVERSED_CLIENT_ID` URL scheme ([iOS setup](/docs/setup/ios#url-scheme-required)).
+- In 2.3.0 and earlier this crashed the app instead of throwing.
+
 ## `type: 'cancelled'` after picking a Google account (Android production) {#cancelled-after-account-pick}
 
 Credential Manager or Google Play Services often reports OAuth misconfiguration as **user cancellation** (`RESULT_CANCELED`). The library inspects cancellation payloads and provider error messages for status code `10`, SHA-1, or developer error details to throw `DEVELOPER_ERROR`. However, if Google closes the dialog without diagnostic details, it surfaces as `type: 'cancelled'`.

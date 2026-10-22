@@ -438,14 +438,18 @@ class GoogleSignInError extends Error {
   name: 'GoogleSignInError'
   code: StatusCode
   userInfo?: Record<string, string>
+  cause?: unknown
 }
 ```
+
+Native errors that carry a recognised [`statusCodes`](#statuscodes) value reach JS as `GoogleSignInError` with `code` set, `message` the native message, and the raw bridged error as `cause`. Errors the library does not recognise pass through unchanged, so use `isErrorWithCode` before reading `code`.
 
 | Property | Description |
 | -------- | ----------- |
 | `code` | One of `StatusCode` / [`statusCodes`](#statuscodes). |
 | `message` | Human-readable message from native layer. |
 | `userInfo` | Optional key–value metadata (e.g. Play Services `status` on Android). |
+| `cause` | The raw error that came over the native bridge. |
 
 ### `statusCodes`
 
@@ -469,7 +473,7 @@ type StatusCode = (typeof statusCodes)[keyof typeof statusCodes]
 | `IN_PROGRESS` | No `Activity` / view controller when UI is required (sign-in, `requestScopes`, or Android `getTokens()` when Google asks for consent), or sign-in called before `configure()`. Android `getTokens()` / `clearCachedAccessToken()` do **not** need an Activity when scopes are already granted. |
 | `SIGN_IN_REQUIRED` | User must sign in first (`getTokens()` when no active session). |
 | `SIGN_IN_CANCELLED` | Reserved / parity — prefer `isCancelledResponse()` on responses. Also thrown from Android authorization UI cancel. |
-| `DEVELOPER_ERROR` | **Android** — OAuth misconfiguration surfaced by Credential Manager / AuthorizationClient (wrong SHA-1, package, or client ID). Note: many SHA-1 issues still appear as `type: 'cancelled'` — see [troubleshooting](/docs/guide/troubleshooting#cancelled-after-account-pick). |
+| `DEVELOPER_ERROR` | **Android** — OAuth misconfiguration surfaced by Credential Manager / AuthorizationClient (wrong SHA-1, package, or client ID). Note: many SHA-1 issues still appear as `type: 'cancelled'` — see [troubleshooting](/docs/guide/troubleshooting#cancelled-after-account-pick). **iOS** — the reversed client ID is not in `CFBundleURLSchemes`; see [troubleshooting](/docs/guide/troubleshooting#developer_error-on-the-first-sign-in-tap-ios). |
 
 ### `isErrorWithCode(error: unknown): error is GoogleSignInError`
 
